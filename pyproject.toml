@@ -14,3 +14,11 @@ wt-project-web = "wt_project_web.cli:main"
 
 [project.entry-points."wt_tools.project_types"]
 web = "wt_project_web:WebProjectType"
+
+[tool.hatch.build.targets.wheel]
+packages = ["wt_project_web"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"wt_project_web/templates" = "wt_project_web/templates"
+"wt_project_web/directives" = "wt_project_web/directives"
+"wt_project_web/verification-rules" = "wt_project_web/verification-rules"
