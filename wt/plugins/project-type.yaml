@@ -1,0 +1,9 @@
+# Project type configuration — managed by wt-project init
+# Change with: wt-project init --project-type <type>
+type: base
+version: 0.1.0
+description: "Universal project knowledge — rules and directives for any project"
+
+
+# Stats: 3 verification rules, 4 orchestration directives
+# Rules and directives are loaded dynamically from the installed package.
