@@ -1,12 +1,12 @@
-# Smoke Test Configuration — template for post-merge smoke tests.
+# Smoke Test Configuration — template for post-merge Playwright functional tests.
 #
 # These values are injected into the orchestration config.
 # Customize in your project's wt/orchestration/config.yaml.
 
 smoke:
-  command: "pnpm test:smoke"
-  timeout: 120          # seconds to wait for smoke test completion
+  command: "npx playwright test"
+  timeout: 180          # seconds to wait for smoke test completion
   env:
-    SMOKE_BASE_URL: "http://localhost:3002"
+    SMOKE_BASE_URL: "http://localhost:3000"
   fix_timeout: 300      # max seconds agent spends fixing a failed smoke
-  retry: 1              # retries before escalating to human
+  retry: 2              # retries before escalating to human

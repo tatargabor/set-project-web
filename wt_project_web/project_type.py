@@ -105,6 +105,19 @@ class WebProjectType(BaseProjectType):
                     "forbidden": r'variant="ghost".*>[^<]*<',
                 },
             ),
+            VerificationRule(
+                id="functional-test-coverage",
+                description="User-facing feature changes must include Playwright functional tests",
+                check="file-mentions",
+                severity="warning",
+                config={
+                    "source": {
+                        "pattern": "src/app/**/page.tsx",
+                        "exclude": ["src/app/api/**"],
+                    },
+                    "target": "tests/e2e/*.spec.ts",
+                },
+            ),
         ]
         return base_rules + web_rules
 
@@ -140,6 +153,15 @@ class WebProjectType(BaseProjectType):
                 description="Flag changes to cross-cutting files for extra review",
                 trigger="change-modifies-any(cross_cutting_files.sidebar, cross_cutting_files.i18n, cross_cutting_files.route_labels)",
                 action="flag-for-review",
+            ),
+            OrchestrationDirective(
+                id="playwright-setup",
+                description="First change that creates Playwright tests must also set up playwright.config.ts and install browsers",
+                trigger='change-creates("tests/e2e/*.spec.ts")',
+                action="warn",
+                config={
+                    "message": "Playwright test files detected — ensure playwright.config.ts exists and @playwright/test is in devDependencies"
+                },
             ),
         ]
         return base_directives + web_directives

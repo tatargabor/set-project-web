@@ -5,6 +5,7 @@ core:
   - rules/auth-conventions.md
   - rules/data-model.md
   - rules/deployment.md
+  - rules/testing-conventions.md
   - tsconfig.json
   - tailwind.config.ts
   - postcss.config.mjs
