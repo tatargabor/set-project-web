@@ -2,38 +2,30 @@
 paths:
   - "prisma/**"
   - "src/lib/prisma*"
-  - "docs/design/data-model*"
 ---
 # Data Model Conventions
 
 ## Prisma Schema
-- IDs: use `cuid()` default — never auto-increment
-- Table mapping: `@@map("snake_case_table")` for all models
-- Field mapping: `@map("snake_case_field")` for camelCase fields
 - Every model needs `createdAt` and `updatedAt` timestamps
-- Soft delete: use `deletedAt DateTime?` — never hard delete user data
-
-## Tenant Scoping
-- Every business model MUST have `tenantId String` field
-- Add `@@index([tenantId])` to all tenant-scoped models
-- Queries MUST filter by `tenantId` — no cross-tenant data leaks
-- Exceptions: platform-level models (Tenant, PlatformConfig)
+- Use appropriate ID strategy for the project (auto-increment or cuid)
+- Define explicit relations with clear naming
 
 ## Migrations
 - Run `prisma migrate dev --name descriptive-name` to create migrations
-- Migration names: `add_user_roles`, `create_invoice_table` (snake_case, descriptive)
+- Migration names: `add_user_roles`, `create_order_table` (snake_case, descriptive)
 - Review generated SQL before committing
 - Never edit deployed migrations — create new ones to fix issues
-- Update `docs/design/data-model.md` when adding/modifying models
+- Never use `prisma db push` in production — always use migrations
 
 ## State Machines
-- Use enum fields for states: `status InvoiceStatus`
+- Use enum fields for states (e.g., `status OrderStatus`)
 - Define valid transitions in code, not in schema
-- Log state transitions with `logActivity()`
 
 ## Relations
 - Use explicit relation names for self-referencing or ambiguous relations
-- Cascade deletes only for true child entities (e.g., InvoiceItem → Invoice)
+- Cascade deletes only for true child entities (e.g., OrderItem → Order)
 - Set `onDelete: SetNull` for optional references
 
-Full reference: `docs/design/data-model.md`
+## Seeding
+- Use `prisma/seed.ts` with `tsx` runner
+- Seed data should be idempotent (use `upsert` or check-before-insert)

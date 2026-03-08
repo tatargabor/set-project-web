@@ -3,61 +3,32 @@ version: 1
 # Cross-cutting files — files touched by multiple features.
 # The orchestrator uses this to detect conflicts and enforce consistency.
 cross_cutting_files:
-  sidebar:
-    - src/components/app-sidebar.tsx
-    - src/components/platform-sidebar.tsx
   navigation:
     - src/app/**/layout.tsx
-  i18n:
-    - messages/*.json
-  route_labels:
-    - src/lib/route-labels.ts
   db_schema:
     - prisma/schema.prisma
-  design_docs:
-    - docs/design/*.md
   auth:
     - src/lib/auth.ts
     - src/middleware.ts
 
 # Feature registry — logical features mapped to file scopes.
 # Each feature can reference a rules file for path-scoped activation.
+# Projects should customize this with their actual features.
 features:
   auth:
     touches:
       - src/lib/auth.ts
-      - src/app/login/**
-      - src/app/register/**
+      - src/app/**/login/**
+      - src/app/**/register/**
       - src/middleware.ts
     description: Authentication and authorization (NextAuth/Auth.js)
     rules_file: .claude/rules/auth-conventions.md
-
-  dashboard:
-    touches:
-      - src/app/(dashboard)/**
-      - src/components/dashboard-*
-    description: Main dashboard pages and components
-
-  email:
-    touches:
-      - src/lib/email/**
-      - src/app/api/imap/**
-      - src/app/**/email-*/**
-    description: Email integration (IMAP, SMTP, templates)
-
-  i18n:
-    touches:
-      - messages/*.json
-      - src/i18n/**
-      - src/lib/i18n.ts
-    description: Internationalization (next-intl)
 
   data_model:
     touches:
       - prisma/schema.prisma
       - prisma/migrations/**
       - prisma/seed.ts
-      - docs/design/data-model.md
     description: Database schema and migrations (Prisma)
     rules_file: .claude/rules/data-model.md
 

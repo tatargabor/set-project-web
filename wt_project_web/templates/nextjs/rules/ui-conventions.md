@@ -11,9 +11,9 @@ paths:
 - Icons: use `lucide-react` exclusively
 
 ## Layout Patterns
-- Page layout: `<PageHeader>` + content area
+- Page layout: consistent header/content structure
 - Use responsive containers — never hardcode pixel widths
-- Sidebar items use `titleKey` for i18n — never hardcode labels
+- Mobile-first: design for small screens, enhance for larger
 
 ## Button Variant Policy
 - `variant="ghost"` → icon-only, NO text content
@@ -23,7 +23,6 @@ paths:
 
 ## Table Conventions
 - Use `@tanstack/react-table` via shadcn DataTable
-- Column headers must be translatable (i18n keys)
 - Include loading skeleton states
 - Pagination server-side for datasets > 50 rows
 
@@ -33,14 +32,11 @@ paths:
 - Dialogs close on successful submit, stay open on error
 - Confirmation dialogs for destructive actions
 
-## i18n Rules
-- Every user-visible string MUST use `useTranslations()` or `getTranslations()`
-- Never hardcode Hungarian or English strings in components
-- Key naming: `section.subsection.label` (dot-separated, lowercase)
-- All keys must exist in ALL locale files (enforced by i18n-completeness rule)
+## Components by Default
+- All components are Server Components by default
+- Add `"use client"` only when needed: event handlers, hooks, browser APIs
+- Keep client components small — extract data fetching to server parents
 
 ## File Size
 - Components should stay under 400 lines
 - Split large components: extract hooks, sub-components, or utilities
-
-Full reference: `docs/design/ui-patterns.md`
