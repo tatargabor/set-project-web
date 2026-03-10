@@ -4,38 +4,42 @@ Web project type plugin for [wt-tools](https://github.com/tatargabor/wt-tools). 
 
 > **Status:** Experimental / active development. I built this for my own AI-assisted web projects and am sharing it as a possible direction for others. The conventions reflect my preferences and what I've found works well with AI agents — your mileage may vary. Contributions, forks, and feedback are welcome.
 
-## Why This Exists
+## Why Not Just Use a Smart Agent?
 
-AI agents building web applications make predictable mistakes: they forget SEO metadata, skip error boundaries, expose secrets via `NEXT_PUBLIC_`, write inaccessible markup, and create i18n merge conflicts when working in parallel. These aren't edge cases — they happen on every non-trivial project.
+A capable model like Claude already knows SEO best practices, accessibility standards, and security conventions. So why encode them in rule files?
 
-**wt-project-web** encodes modern web development standards as machine-readable rules, so agents get it right the first time without needing project-specific instructions for universal concerns.
+**Consistency across agents.** When an orchestrator runs 5 agents in parallel on different features, each agent makes independent decisions. One might use `next/image`, another writes raw `<img>` tags. One adds `generateMetadata`, another forgets. The rules create a shared standard that every agent follows, regardless of which change it's working on.
 
-The plugin is designed to be **customizable without forking** — disable rules you disagree with, override severities, add your own conventions via YAML, or build a layer on top (e.g., `wt-project-your-org`) that inherits everything and adds organization-specific rules.
+**Context window efficiency.** Stuffing all conventions into CLAUDE.md wastes tokens on every turn — UI rules load when the agent is editing a Prisma migration. Path-scoped rules (`paths:` frontmatter) load only when the agent touches relevant files. An agent working on `prisma/schema.prisma` sees data-model conventions; an agent working on `src/components/` sees UI conventions. Neither wastes context on the other's domain.
+
+**Persistence across sessions.** An agent might know to add error boundaries — but will it remember on session 47 of iterative development? Rules survive session boundaries. They apply equally to the first feature and the fiftieth bug fix.
+
+**Orchestration coordination.** Individual agent knowledge can't prevent merge conflicts. When two agents both modify `messages/en.json`, rules can serialize those changes. When a schema change merges, rules can trigger `prisma generate` automatically. This is coordination logic, not domain knowledge — agents can't infer it from training data.
+
+**Verification at merge time.** Knowing a convention and enforcing it are different things. Verification rules catch what agents miss under pressure — an `error` severity rule blocks the merge, a `warning` flags it for review. This is a safety net, not a substitute for agent capability.
 
 ## What Problem It Solves
 
 When an orchestrator (like wt-tools) spins up multiple AI agents to build a web application in parallel, each agent needs to know:
 
-- **What conventions to follow** — path-scoped rule files activate only when the agent touches relevant files (editing a component triggers UI conventions, not deployment rules)
+- **What conventions to follow** — path-scoped rule files activate only when the agent touches relevant files
 - **What to verify before merging** — automated checks catch missing alt text, unsynced locale files, or schema changes without migrations
 - **How to coordinate** — directives prevent merge conflicts (serialize i18n changes), trigger post-merge commands (regenerate Prisma client), and flag cross-cutting modifications for review
-
-Without this, every project needs a massive CLAUDE.md stuffed with web conventions. With it, `wt-project init --project-type web --template nextjs` sets up all conventions automatically.
 
 ## Design Principles
 
 - **Generic, not project-specific** — covers universal modern web standards (SEO, a11y, security, performance). No e-commerce logic, no business rules, no framework opinions beyond the chosen template
 - **Path-scoped activation** — rules load only when relevant files are touched, keeping the agent's context window efficient
 - **Layered inheritance** — base → web → organization-specific. Override or disable any rule without forking
-- **Convention over configuration** — sensible defaults that work for 90% of Next.js projects. Customize the remaining 10% via YAML overrides
+- **Customizable without forking** — disable rules you disagree with, override severities, add your own conventions via YAML, or build a layer on top (e.g., `wt-project-your-org`) that inherits everything and adds organization-specific rules
 
 ## Current State
 
-Production-ready for Next.js App Router projects. The `nextjs` template provides a complete set of conventions covering 12 areas of modern web development: UI, functional patterns, auth, data model, deployment, testing, integrations, SEO, accessibility, performance, security, and error handling.
+The `nextjs` template provides conventions covering 12 areas of modern web development: UI, functional patterns, auth, data model, deployment, testing, integrations, SEO, accessibility, performance, security, and error handling. These conventions are based on real-world usage with AI agents and reflect patterns that have proven to reduce common mistakes.
 
 The `spa` template is a minimal starting point for other frameworks (React SPA, Vue, Svelte) — it provides the structure but expects projects to fill in framework-specific conventions.
 
-**Not just for greenfield projects.** The conventions are designed for iterative development with wt-tools — you can use them for the initial build and then keep building on the same codebase with the same rules. Agents pick up the conventions on every change, whether it's the first feature or the fiftieth. This means bug fixes, refactors, and new features all get the same quality guardrails automatically.
+**Designed for iterative development.** The conventions work for the initial build and for ongoing development on the same codebase. Agents pick up the rules on every change — bug fixes, refactors, and new features all get the same guardrails. This is not a one-shot scaffolding tool; it's a living knowledge layer that stays relevant as the project evolves.
 
 ## What's NOT Included (Yet)
 
