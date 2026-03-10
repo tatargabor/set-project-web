@@ -35,15 +35,17 @@ Production-ready for Next.js App Router projects. The `nextjs` template provides
 
 The `spa` template is a minimal starting point for other frameworks (React SPA, Vue, Svelte) — it provides the structure but expects projects to fill in framework-specific conventions.
 
+**Not just for greenfield projects.** The conventions are designed for iterative development with wt-tools — you can use them for the initial build and then keep building on the same codebase with the same rules. Agents pick up the conventions on every change, whether it's the first feature or the fiftieth. This means bug fixes, refactors, and new features all get the same quality guardrails automatically.
+
 ## What's NOT Included (Yet)
 
-This plugin covers **development-time conventions** — what agents should know while writing code. It does **not** currently handle:
+This plugin currently covers **development-time conventions** — what agents should know while writing and reviewing code. It does **not** yet handle:
 
-- **Deployment pipelines** — CI/CD configuration, Docker images, cloud platform setup (Vercel, AWS, etc.)
+- **Production deployment** — CI/CD pipelines, Docker images, cloud platform setup (Vercel, AWS, etc.)
 - **Infrastructure** — database provisioning, CDN configuration, monitoring dashboards
-- **Runtime operations** — log aggregation, alerting, on-call setup
+- **Runtime operations & maintenance** — log aggregation, alerting, on-call setup, dependency updates
 
-These are planned for future versions as the plugin matures. The deployment.md rule file covers deployment *conventions* (migration-first deploys, health checks, env var hygiene), but the actual deployment automation is out of scope for now.
+The deployment.md rule file covers deployment *conventions* (migration-first deploys, health checks, env var hygiene), but the actual deployment automation and production maintenance workflows are planned for future versions.
 
 ## Roadmap
 
