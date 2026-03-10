@@ -47,6 +47,24 @@ Both test levels run pre-merge in the worktree:
 - Auth-protected routes: test that unauthenticated users are redirected to login
 - Form submissions: test with real data, verify server-side effects (DB records, redirects)
 
+### Cold-Visit Tests (Critical)
+Every E2E test file MUST include a **cold-visit test** — a test that navigates directly to the page as the very first action, without any prior setup (no login, no add-to-cart, no session cookie). This catches Server Component bugs where:
+- `cookies().set()` is called from a Server Component instead of a Server Action
+- Session creation crashes on first visit (no existing cookie → write attempt → Next.js error)
+- Pages assume prior state that doesn't exist for new users
+
+Example pattern:
+```typescript
+test("cold visit — page loads without prior session", async ({ page }) => {
+  // Navigate directly — no prior actions, no cookies
+  await page.goto("/cart");
+  // Should show empty state, NOT crash with runtime error
+  await expect(page.getByText("Your cart is empty")).toBeVisible();
+});
+```
+
+Why: Agents naturally write E2E tests that set up state first (add product → visit cart). This means every test has a valid session cookie by the time it reaches the page. Cold-visit tests are the only way to catch cookie/session initialization bugs in Server Components.
+
 ## Playwright Infrastructure Bootstrap
 
 The infrastructure/foundation change (first in dependency order) MUST set up Playwright:
