@@ -35,13 +35,28 @@ Production-ready for Next.js App Router projects. The `nextjs` template provides
 
 The `spa` template is a minimal starting point for other frameworks (React SPA, Vue, Svelte) — it provides the structure but expects projects to fill in framework-specific conventions.
 
+## What's NOT Included (Yet)
+
+This plugin covers **development-time conventions** — what agents should know while writing code. It does **not** currently handle:
+
+- **Deployment pipelines** — CI/CD configuration, Docker images, cloud platform setup (Vercel, AWS, etc.)
+- **Infrastructure** — database provisioning, CDN configuration, monitoring dashboards
+- **Runtime operations** — log aggregation, alerting, on-call setup
+
+These are planned for future versions as the plugin matures. The deployment.md rule file covers deployment *conventions* (migration-first deploys, health checks, env var hygiene), but the actual deployment automation is out of scope for now.
+
 ## Roadmap
 
+Near-term:
+- **Deployment integration** — CI/CD templates, Docker configs, and platform-specific deploy rules as opt-in modules
 - **Template modules** — opt-in convention packs (e.g., `email`, `payments`, `cms`) that add domain-specific rules without bloating the core template
 - **Feedback loop** — agents report which rules triggered, which were useful, and which produced false positives, feeding back into rule refinement
+
+Longer-term:
 - **More templates** — Remix, Astro, and framework-agnostic API-only templates
 - **Rule auto-fix** — verification rules that can suggest or apply fixes, not just flag violations
 - **Consumer override UX** — simpler YAML-based customization for per-project rule tuning
+- **Runtime conventions** — observability, structured logging, and error tracking patterns as opt-in modules
 
 ## Quick Start
 
