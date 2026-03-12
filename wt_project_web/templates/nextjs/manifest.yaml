@@ -11,6 +11,7 @@ core:
   - rules/performance.md
   - rules/security.md
   - rules/error-handling.md
+  - rules/design-integration.md
   - tsconfig.json
   - tailwind.config.ts
   - postcss.config.mjs

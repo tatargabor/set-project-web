@@ -15,6 +15,9 @@ cross_cutting_files:
     - src/app/robots.ts
   env_config:
     - .env.example
+  design_tokens:
+    - tailwind.config.ts
+    - src/styles/tokens.*
 
 # Feature registry — logical features mapped to file scopes.
 # Each feature can reference a rules file for path-scoped activation.

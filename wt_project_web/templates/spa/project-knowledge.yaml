@@ -21,6 +21,11 @@ cross_cutting_files:
   # theme:
   #   - src/styles/theme.ts
 
+  # Design tokens — colors, spacing, typography from design tool
+  # design_tokens:
+  #   - src/styles/tokens.*
+  #   - src/styles/variables.css
+
 # Feature registry — map features to file scopes.
 # Uncomment and customize for your project structure.
 features: {}
