@@ -357,6 +357,31 @@ class WebProjectType(BaseProjectType):
                 [pm, "install"],
                 cwd=wt_path, capture_output=True, timeout=120,
             )
+
+        # Post-install: generate Prisma client if schema exists
+        if (Path(wt_path) / "prisma" / "schema.prisma").is_file():
+            try:
+                subprocess.run(
+                    ["npx", "prisma", "generate"],
+                    cwd=wt_path, capture_output=True, timeout=60,
+                )
+            except (subprocess.TimeoutExpired, OSError):
+                pass  # non-fatal
+
+        # Post-install: install Playwright browsers if @playwright/test in devDeps
+        try:
+            pkg = json.loads(pkg_json.read_text())
+            if "@playwright/test" in pkg.get("devDependencies", {}):
+                try:
+                    subprocess.run(
+                        ["npx", "playwright", "install", "chromium"],
+                        cwd=wt_path, capture_output=True, timeout=120,
+                    )
+                except (subprocess.TimeoutExpired, OSError):
+                    pass  # non-fatal
+        except (json.JSONDecodeError, OSError):
+            pass
+
         return True
 
     def post_merge_install(self, project_path: str) -> bool:
