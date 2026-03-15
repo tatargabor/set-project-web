@@ -1,6 +1,9 @@
 """Web project type plugin for wt-tools."""
 
-from typing import List
+import json
+import subprocess
+from pathlib import Path
+from typing import List, Optional
 
 from wt_project_base import BaseProjectType
 from wt_project_base.base import (
@@ -22,7 +25,7 @@ class WebProjectType(BaseProjectType):
     def info(self) -> ProjectTypeInfo:
         return ProjectTypeInfo(
             name="web",
-            version="0.1.0",
+            version="0.2.0",
             description="Web application project knowledge (i18n, routing, DB, components)",
             parent="base",
         )
@@ -246,3 +249,125 @@ class WebProjectType(BaseProjectType):
             ),
         ]
         return base_directives + web_directives
+
+    # --- Profile methods (engine integration) ---
+
+    def planning_rules(self) -> str:
+        rules_file = Path(__file__).parent / "planning_rules.txt"
+        if rules_file.is_file():
+            return rules_file.read_text()
+        return ""
+
+    def security_rules_paths(self, project_path: str) -> List[Path]:
+        rules_dir = Path(project_path) / ".claude" / "rules"
+        paths = []
+        for pattern in ("security*.md", "auth*.md", "api-design*.md"):
+            paths.extend(rules_dir.glob(pattern))
+        if not paths:
+            template_rules = Path(__file__).parent / "templates" / "nextjs" / "rules"
+            for name in ("security.md", "auth-conventions.md"):
+                p = template_rules / name
+                if p.is_file():
+                    paths.append(p)
+        return paths
+
+    def security_checklist(self) -> str:
+        return (
+            "- [ ] Data mutations by client-provided ID include ownership/authorization check\n"
+            "- [ ] Protected resources enforce auth before the handler runs (middleware, not handler-level)\n"
+            "- [ ] Public-facing inputs are validated at the boundary (type, range, size)\n"
+            "- [ ] Multi-user queries are scoped by the owning entity\n"
+            "- [ ] No `dangerouslySetInnerHTML` or `v-html` with user-supplied content"
+        )
+
+    def generated_file_patterns(self) -> List[str]:
+        return [
+            "tsconfig.tsbuildinfo", "*.tsbuildinfo",
+            "next-env.d.ts",
+            "package-lock.json", "yarn.lock", "pnpm-lock.yaml",
+            ".next/**", "dist/**", "build/**",
+        ]
+
+    def lockfile_pm_map(self) -> list:
+        return [
+            ("pnpm-lock.yaml", "pnpm"),
+            ("yarn.lock", "yarn"),
+            ("bun.lockb", "bun"),
+            ("bun.lock", "bun"),
+            ("package-lock.json", "npm"),
+        ]
+
+    def detect_test_command(self, project_path: str) -> Optional[str]:
+        pkg_json = Path(project_path) / "package.json"
+        if not pkg_json.is_file():
+            return None
+        pm = self.detect_package_manager(project_path) or "npm"
+        try:
+            data = json.loads(pkg_json.read_text())
+            scripts = data.get("scripts", {})
+            for candidate in ("test", "test:unit", "test:ci"):
+                if scripts.get(candidate):
+                    return f"{pm} run {candidate}"
+        except (json.JSONDecodeError, OSError):
+            pass
+        return None
+
+    def detect_build_command(self, project_path: str) -> Optional[str]:
+        pkg_json = Path(project_path) / "package.json"
+        if not pkg_json.is_file():
+            return None
+        pm = self.detect_package_manager(project_path) or "npm"
+        try:
+            data = json.loads(pkg_json.read_text())
+            scripts = data.get("scripts", {})
+            for candidate in ("build:ci", "build"):
+                if scripts.get(candidate):
+                    return f"{pm} run {candidate}"
+        except (json.JSONDecodeError, OSError):
+            pass
+        return None
+
+    def detect_dev_server(self, project_path: str) -> Optional[str]:
+        pkg_json = Path(project_path) / "package.json"
+        if not pkg_json.is_file():
+            return None
+        pm = self.detect_package_manager(project_path) or "npm"
+        try:
+            data = json.loads(pkg_json.read_text())
+            if data.get("scripts", {}).get("dev"):
+                return f"{pm} run dev"
+        except (json.JSONDecodeError, OSError):
+            pass
+        return None
+
+    def bootstrap_worktree(self, project_path: str, wt_path: str) -> bool:
+        pkg_json = Path(wt_path) / "package.json"
+        node_modules = Path(wt_path) / "node_modules"
+        if not pkg_json.is_file() or node_modules.is_dir():
+            return True
+        pm = self.detect_package_manager(wt_path)
+        if not pm:
+            return True
+        result = subprocess.run(
+            [pm, "install", "--frozen-lockfile"],
+            cwd=wt_path, capture_output=True, timeout=120,
+        )
+        if result.returncode != 0:
+            subprocess.run(
+                [pm, "install"],
+                cwd=wt_path, capture_output=True, timeout=120,
+            )
+        return True
+
+    def post_merge_install(self, project_path: str) -> bool:
+        pm = self.detect_package_manager(project_path)
+        if not pm:
+            return True
+        result = subprocess.run(
+            [pm, "install"],
+            cwd=project_path, capture_output=True, timeout=300,
+        )
+        return result.returncode == 0
+
+    def ignore_patterns(self) -> List[str]:
+        return ["node_modules", ".next", "dist", "build", ".turbo"]
