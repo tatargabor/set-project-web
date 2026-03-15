@@ -1,22 +1,22 @@
 # wt-project-web
 
-Web project type plugin for [wt-tools](https://github.com/tatargabor/wt-tools). Provides web-specific verification rules, orchestration directives, and project templates on top of [wt-project-base](https://github.com/tatargabor/wt-project-base).
+Web project type plugin for [wt-tools](https://github.com/tatargabor/wt-tools). Provides web-specific verification rules, orchestration directives, design integration, and project templates on top of [wt-project-base](https://github.com/tatargabor/wt-project-base).
 
-> **Status:** Experimental / active development. I built this for my own AI-assisted web projects and am sharing it as a possible direction for others. The conventions reflect my preferences and what I've found works well with AI agents — your mileage may vary. Contributions, forks, and feedback are welcome.
+> **Status:** Experimental / active development. Built for AI-assisted web projects and shared as a direction for others. The conventions reflect real-world production usage with AI agents across multiple projects. Contributions, forks, and feedback are welcome.
 
 ## Why Not Just Use a Smart Agent?
 
 A capable model like Claude already knows SEO best practices, accessibility standards, and security conventions. So why encode them in rule files?
 
-**Consistency across agents.** When an orchestrator runs 5 agents in parallel on different features, each agent makes independent decisions. One might use `next/image`, another writes raw `<img>` tags. One adds `generateMetadata`, another forgets. The rules create a shared standard that every agent follows, regardless of which change it's working on.
+**Consistency across agents.** When an orchestrator runs 5 agents in parallel on different features, each agent makes independent decisions. One might use `next/image`, another writes raw `<img>` tags. The rules create a shared standard that every agent follows.
 
-**Context window efficiency.** Stuffing all conventions into CLAUDE.md wastes tokens on every turn — UI rules load when the agent is editing a Prisma migration. Path-scoped rules (`paths:` frontmatter) load only when the agent touches relevant files. An agent working on `prisma/schema.prisma` sees data-model conventions; an agent working on `src/components/` sees UI conventions. Neither wastes context on the other's domain.
+**Context window efficiency.** Stuffing all conventions into CLAUDE.md wastes tokens on every turn. Path-scoped rules (`paths:` frontmatter) load only when the agent touches relevant files. An agent working on `prisma/schema.prisma` sees data-model conventions; an agent working on `src/components/` sees UI conventions.
 
-**Persistence across sessions.** An agent might know to add error boundaries — but will it remember on session 47 of iterative development? Rules survive session boundaries. They apply equally to the first feature and the fiftieth bug fix.
+**Persistence across sessions.** An agent might know to add error boundaries — but will it remember on session 47? Rules survive session boundaries and apply equally to the first feature and the fiftieth bug fix.
 
-**Orchestration coordination.** Individual agent knowledge can't prevent merge conflicts. When two agents both modify `messages/en.json`, rules can serialize those changes. When a schema change merges, rules can trigger `prisma generate` automatically. This is coordination logic, not domain knowledge — agents can't infer it from training data.
+**Orchestration coordination.** Individual agent knowledge can't prevent merge conflicts. When two agents both modify `messages/en.json`, rules serialize those changes. When a schema change merges, rules trigger `prisma generate` automatically.
 
-**Verification at merge time.** Knowing a convention and enforcing it are different things. Verification rules catch what agents miss under pressure — an `error` severity rule blocks the merge, a `warning` flags it for review. This is a safety net, not a substitute for agent capability.
+**Verification at merge time.** Knowing a convention and enforcing it are different. Verification rules catch what agents miss — an `error` severity rule blocks the merge, a `warning` flags it for review.
 
 ## What Problem It Solves
 
@@ -25,65 +25,16 @@ When an orchestrator (like wt-tools) spins up multiple AI agents to build a web 
 - **What conventions to follow** — path-scoped rule files activate only when the agent touches relevant files
 - **What to verify before merging** — automated checks catch missing alt text, unsynced locale files, or schema changes without migrations
 - **How to coordinate** — directives prevent merge conflicts (serialize i18n changes), trigger post-merge commands (regenerate Prisma client), and flag cross-cutting modifications for review
-
-## Design Principles
-
-- **Generic, not project-specific** — covers universal modern web standards (SEO, a11y, security, performance). No e-commerce logic, no business rules, no framework opinions beyond the chosen template
-- **Path-scoped activation** — rules load only when relevant files are touched, keeping the agent's context window efficient
-- **Layered inheritance** — base → web → organization-specific. Override or disable any rule without forking
-- **Customizable without forking** — disable rules you disagree with, override severities, add your own conventions via YAML, or build a layer on top (e.g., `wt-project-your-org`) that inherits everything and adds organization-specific rules
-
-## Current State
-
-The `nextjs` template provides conventions covering 12 areas of modern web development: UI, functional patterns, auth, data model, deployment, testing, integrations, SEO, accessibility, performance, security, and error handling. These conventions are based on real-world usage with AI agents and reflect patterns that have proven to reduce common mistakes.
-
-The `spa` template is a minimal starting point for other frameworks (React SPA, Vue, Svelte) — it provides the structure but expects projects to fill in framework-specific conventions.
-
-**Designed for iterative development.** The conventions work for the initial build and for ongoing development on the same codebase. Agents pick up the rules on every change — bug fixes, refactors, and new features all get the same guardrails. This is not a one-shot scaffolding tool; it's a living knowledge layer that stays relevant as the project evolves.
-
-## What's NOT Included (Yet)
-
-This plugin currently covers **development-time conventions** — what agents should know while writing and reviewing code. It does **not** yet handle:
-
-- **Production deployment** — CI/CD pipelines, Docker images, cloud platform setup (Vercel, AWS, etc.)
-- **Infrastructure** — database provisioning, CDN configuration, monitoring dashboards
-- **Runtime operations & maintenance** — log aggregation, alerting, on-call setup, dependency updates
-
-The deployment.md rule file covers deployment *conventions* (migration-first deploys, health checks, env var hygiene), but the actual deployment automation and production maintenance workflows are planned for future versions.
-
-## Roadmap
-
-Near-term:
-- **Deployment integration** — CI/CD templates, Docker configs, and platform-specific deploy rules as opt-in modules
-- **Template modules** — opt-in convention packs (e.g., `email`, `payments`, `cms`) that add domain-specific rules without bloating the core template
-- **Feedback loop** — agents report which rules triggered, which were useful, and which produced false positives, feeding back into rule refinement
-
-Longer-term:
-- **More templates** — Remix, Astro, and framework-agnostic API-only templates
-- **Rule auto-fix** — verification rules that can suggest or apply fixes, not just flag violations
-- **Consumer override UX** — simpler YAML-based customization for per-project rule tuning
-- **Runtime conventions** — observability, structured logging, and error tracking patterns as opt-in modules
-
-## Quick Start
-
-```bash
-# Install
-pip install wt-project-web
-
-# Initialize a Next.js project
-wt-project-web init --type nextjs --target /path/to/project
-
-# List available templates
-wt-project-web list
-```
+- **How to match the design** — design integration rules guide agents to use Figma source files and design tokens instead of guessing
 
 ## What It Provides
 
 ### Templates
-- **Next.js App Router** (`nextjs`) — Full-stack Next.js with Prisma, next-intl, shadcn/ui
+
+- **Next.js App Router** (`nextjs`) — Full-stack Next.js with Prisma, next-intl, shadcn/ui, Figma design integration
 - **Generic SPA** (`spa`) — Minimal starting point for any SPA framework
 
-### Convention Rules (12 path-scoped rule files)
+### Convention Rules (13 path-scoped rule files)
 
 | Rule File | Covers |
 |-----------|--------|
@@ -99,6 +50,7 @@ wt-project-web list
 | `performance` | Core Web Vitals, next/image, next/font, caching, bundle hygiene |
 | `security` | CSP, HSTS, CORS, rate limiting, input validation, NEXT_PUBLIC_ safety |
 | `error-handling` | Error boundaries, not-found pages, loading states, global-error |
+| `design-integration` | Figma source files, design token mapping, component hierarchy |
 
 ### Verification Rules (11 web-specific)
 
@@ -132,18 +84,104 @@ Plus base rules from `wt-project-base` (file-size-limit, no-secrets-in-source, t
 
 Plus base directives from `wt-project-base` (install-deps, no-parallel-lockfile, config-review).
 
+### Gate Overrides (per-change-type verification)
+
+Different change types get different quality gate configurations:
+
+| Change Type | Override | Rationale |
+|-------------|----------|-----------|
+| `foundational` | E2E required, smoke warn-only | Infrastructure setup needs full E2E but smoke failures are expected |
+| `schema` | Test files not required | Database schema changes may not need their own test files |
+| `cleanup-after` | Smoke warn-only | Cleanup changes shouldn't block on smoke |
+
+### Design Integration
+
+The `design-integration.md` rule and Figma support enable design-driven development:
+
+- **Figma source files** in `docs/figma-raw/` — component hierarchy, mock data, icon usage
+- **Design tokens** mapped to `tailwind.config.ts` — colors, spacing, typography, radius
+- **Component mapping** to shadcn/ui — design components mapped to implementation primitives
+- **Automatic setup** — `wt-project-web init --type nextjs` prompts for Figma file URL and registers the MCP server
+
+### Engine Integration (Profile Methods)
+
+These methods are called by the wt-tools orchestration engine:
+
+| Method | What it does |
+|--------|-------------|
+| `detect_package_manager()` | Checks lockfiles (pnpm → yarn → npm → bun) |
+| `detect_test_command()` | Reads package.json for `test`, `test:unit`, `test:ci` |
+| `detect_build_command()` | Reads package.json for `build:ci` or `build` |
+| `detect_dev_server()` | Reads package.json for `dev` script |
+| `bootstrap_worktree()` | `npm install` + `prisma generate` + `playwright install` |
+| `post_merge_install()` | `npm install` after merge |
+| `security_rules_paths()` | Returns paths to `security.md`, `auth-conventions.md` |
+| `security_checklist()` | IDOR, auth middleware, input validation, data scoping, XSS |
+| `generated_file_patterns()` | `next-env.d.ts`, `.next/`, `dist/`, `build/`, `.turbo/` |
+| `ignore_patterns()` | `node_modules`, `.next`, `dist`, `build`, `.turbo` |
+| `gate_overrides(change_type)` | Per-change-type verify gate configuration |
+
+## Quick Start
+
+```bash
+# Install
+pip install wt-project-web
+
+# Initialize a Next.js project (with optional Figma setup)
+wt-project-web init --type nextjs --target /path/to/project
+
+# List available templates
+wt-project-web list
+```
+
+## Design Principles
+
+- **Generic, not project-specific** — covers universal modern web standards (SEO, a11y, security, performance). No e-commerce logic, no business rules, no framework opinions beyond the chosen template
+- **Path-scoped activation** — rules load only when relevant files are touched, keeping the agent's context window efficient
+- **Layered inheritance** — base → web → organization-specific. Override or disable any rule without forking
+- **Customizable without forking** — disable rules, override severities, add conventions via YAML, or build a layer on top
+
 ## Plugin Architecture
 
 ```
 wt-project-base          Universal rules (file size, secrets, TODOs)
-  └── wt-project-web      Web domain rules (i18n, routing, DB, components)
+  └── wt-project-web      Web domain rules (i18n, routing, DB, components, design)
         └── your-org-web   Organization-specific rules (your conventions)
 ```
 
 Each layer inherits from its parent. Customize via `wt/plugins/project-type.yaml` without writing Python.
 
+## What's NOT Included (Yet)
+
+This plugin currently covers **development-time conventions** — what agents should know while writing and reviewing code. It does **not** yet handle:
+
+- **Production deployment** — CI/CD pipelines, Docker images, cloud platform setup
+- **Infrastructure** — database provisioning, CDN configuration, monitoring dashboards
+- **Runtime operations** — log aggregation, alerting, on-call setup, dependency updates
+
+## Roadmap
+
+Near-term:
+- **Deployment integration** — CI/CD templates, Docker configs, and platform-specific deploy rules as opt-in modules
+- **Template modules** — opt-in convention packs (e.g., `email`, `payments`, `cms`)
+- **Feedback loop** — agents report which rules triggered and which produced false positives
+
+Longer-term:
+- **More templates** — Remix, Astro, and framework-agnostic API-only templates
+- **Rule auto-fix** — verification rules that can suggest or apply fixes
+- **Runtime conventions** — observability, structured logging, and error tracking patterns
+
 ## Documentation
 
 - [Plugin Architecture](docs/plugin-architecture.md) — Three-layer hierarchy and customization
 - [Template Reference](docs/template-reference.md) — Template files and sections
-- [Verification Rules Reference](docs/verification-rules-reference.md) — All rules with check types
+- [Verification Rules Reference](docs/verification-rules-reference.md) — All rules with check types and YAML schema
+
+## Related
+
+- [wt-tools](https://github.com/tatargabor/wt-tools) — The orchestration engine that consumes project type plugins
+- [wt-project-base](https://github.com/tatargabor/wt-project-base) — Abstract base layer with ProjectType ABC and universal rules
+
+## License
+
+MIT
