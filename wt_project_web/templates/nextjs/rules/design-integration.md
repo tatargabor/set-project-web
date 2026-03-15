@@ -28,6 +28,20 @@ These rules apply when a design MCP (e.g., Figma) is registered. If no design to
 - Match design states (hover, focus, disabled, error) to component variant props
 - If a design component has no shadcn/ui equivalent, create in `src/components/` following the same pattern (Radix + Tailwind + `cn()`)
 
+## Figma Source Files
+
+When `docs/figma-raw/*/sources/` exists in the project, these files contain actual component code extracted from the Figma design (via Figma Make or similar). They are the ground-truth for:
+- **Component structure**: exact layout hierarchy, container patterns, flex/grid usage
+- **Icon usage**: which lucide-react icons appear in which components (e.g., `ShoppingBag` for cart)
+- **Data model fields**: TypeScript interfaces with exact field names (e.g., `shortDescription`, `variants`)
+- **Image patterns**: thumbnail dimensions, aspect ratios, placeholder usage
+
+Rules:
+- MUST read matched source files before implementing any UI component — the orchestrator injects relevant files into your context, but you can also read directly from `docs/figma-raw/*/sources/`
+- Source filenames use `__` as path separators (e.g., `src__components__ProductCard.tsx` → `src/components/ProductCard.tsx`)
+- When source files specify a particular icon, image size, or layout pattern, use it exactly — do not substitute with generic alternatives
+- When source files contain `mockData.ts` or similar data files, use the exact field names and seed entity names from those files in your schema and seed data
+
 ## Responsive Behavior
 
 - Check design for mobile/tablet/desktop breakpoint frames

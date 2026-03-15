@@ -86,6 +86,8 @@ The infrastructure/foundation change (first in dependency order) MUST set up Pla
 
 Feature changes only create their own `tests/e2e/<feature>.spec.ts` files, not infrastructure.
 
+**Startup guide maintenance:** When the infrastructure/foundation change adds new setup steps (Playwright install, DB push, env vars), it MUST also update the `## Application Startup` section in CLAUDE.md so agents entering the worktree later know how to bootstrap the project.
+
 ## Jest/Playwright Coexistence
 
 Jest's default `testRegex` matches `.spec.ts` files. When Playwright tests exist in `tests/e2e/`, Jest picks them up and crashes on Playwright imports in jsdom:
@@ -109,7 +111,11 @@ The orchestrator sets `PW_PORT` env var per worktree (random in 3100-3999) to av
 ```typescript
 const PORT = process.env.PW_PORT ? parseInt(process.env.PW_PORT) : 3100;
 export default defineConfig({
-  use: { baseURL: `http://localhost:${PORT}` },
+  use: {
+    baseURL: `http://localhost:${PORT}`,
+    headless: true,  // explicit — never open a browser window in CI/agent pipelines
+    screenshot: 'on',
+  },
   webServer: {
     command: `pnpm dev --port ${PORT}`,
     url: `http://localhost:${PORT}`,

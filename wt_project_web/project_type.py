@@ -396,3 +396,24 @@ class WebProjectType(BaseProjectType):
 
     def ignore_patterns(self) -> List[str]:
         return ["node_modules", ".next", "dist", "build", ".turbo"]
+
+    def gate_overrides(self, change_type: str) -> dict:
+        """Web-specific gate overrides.
+
+        - foundational (auth): needs e2e for cold-visit tests, warn-only smoke
+        - schema: test_files not required (migrations may lack tests)
+        - cleanup-after: warn-only smoke for CSS regression detection
+        """
+        overrides = {
+            "foundational": {
+                "e2e": "run",
+                "smoke": "warn",
+            },
+            "schema": {
+                "test_files_required": False,
+            },
+            "cleanup-after": {
+                "smoke": "warn",
+            },
+        }
+        return overrides.get(change_type, {})

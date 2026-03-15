@@ -9,6 +9,7 @@ paths:
 - Use shadcn/ui components as the base layer
 - Import from `@/components/ui/` — never use raw Radix primitives directly
 - Icons: use `lucide-react` exclusively
+- When design source files (`docs/figma-raw/*/sources/`) specify particular icons (e.g., `ShoppingBag` for cart, `Package` for products), use those exact icons — design source files override generic icon choices
 
 ## Layout Patterns
 - Page layout: consistent header/content structure
