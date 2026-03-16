@@ -70,6 +70,14 @@ features:
     description: Error boundaries, 404 pages, loading states
     rules_file: .claude/rules/error-handling.md
 
+  worktree_setup:
+    touches:
+      - prisma/**
+      - jest.config*
+      - playwright.config*
+    description: Worktree environment setup (DB init, port isolation, pnpm config)
+    rules_file: .claude/rules/worktree-setup.md
+
 # Verification rule overrides — customize rules from the project type.
 # See: wt-project-base resolve --project-dir .
 verification_overrides: {}

@@ -29,3 +29,25 @@ paths:
 ## Seeding
 - Use `prisma/seed.ts` with `tsx` runner
 - Seed data should be idempotent (use `upsert` or check-before-insert)
+
+## Worktree Setup
+
+When working in a git worktree (parallel agent environment), `dev.db` is gitignored and must be initialized in each worktree:
+
+```bash
+# In every new worktree — run before tests or seed
+npx prisma migrate deploy   # NOT migrate dev — deploy applies existing migrations non-interactively
+npx prisma db seed          # seed data is not committed
+```
+
+**Why `migrate deploy` not `migrate dev`:** `migrate dev` is interactive and creates new migration files. In a worktree you want to apply existing migrations only.
+
+## Prisma Version Pin
+
+Pin `prisma@6` explicitly in `package.json`:
+```json
+"prisma": "6",
+"@prisma/client": "6"
+```
+
+Prisma 7 introduced a breaking change: the `url` field in `datasource` blocks is no longer supported in the same form. Use v6 until explicitly migrating.

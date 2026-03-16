@@ -12,6 +12,8 @@ core:
   - rules/security.md
   - rules/error-handling.md
   - rules/design-integration.md
+  - rules/worktree-setup.md
+  - jest.config.ts
   - tsconfig.json
   - tailwind.config.ts
   - postcss.config.mjs

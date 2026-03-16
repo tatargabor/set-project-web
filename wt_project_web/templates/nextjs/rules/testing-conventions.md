@@ -88,6 +88,46 @@ Feature changes only create their own `tests/e2e/<feature>.spec.ts` files, not i
 
 **Startup guide maintenance:** When the infrastructure/foundation change adds new setup steps (Playwright install, DB push, env vars), it MUST also update the `## Application Startup` section in CLAUDE.md so agents entering the worktree later know how to bootstrap the project.
 
+## Prisma Tests — Jest Environment
+
+Test files that import Prisma client **must** declare the `node` environment — the default `jsdom` environment causes Prisma to fail with cryptic errors:
+
+```typescript
+/**
+ * @jest-environment node
+ */
+import { prisma } from '@/lib/prisma'
+// ...
+```
+
+Add this docblock at the top of every test file that uses Prisma directly.
+
+## pnpm Non-Interactive Builds
+
+In worktrees and CI, `pnpm` may prompt interactively for approval of build scripts (`pnpm approve-builds`), blocking the process. Prevent this by adding to `package.json`:
+
+```json
+{
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  }
+}
+```
+
+This allows all packages to run their postinstall scripts without interactive prompts.
+
+## jest.config.ts — Correct Keys
+
+Common mistake: `setupFilesAfterSetup` does NOT exist in Jest. The correct key is `setupFilesAfterEnv`:
+
+```typescript
+// ✓ correct
+setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+
+// ✗ wrong — silently ignored by Jest
+setupFilesAfterSetup: ['<rootDir>/jest.setup.ts'],
+```
+
 ## Jest/Playwright Coexistence
 
 Jest's default `testRegex` matches `.spec.ts` files. When Playwright tests exist in `tests/e2e/`, Jest picks them up and crashes on Playwright imports in jsdom:
