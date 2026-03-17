@@ -28,3 +28,10 @@ paths:
 - Passwords hashed with `bcrypt` (bcryptjs)
 - Never log or expose password hashes
 - JWT session strategy for stateless auth
+
+## Edge Runtime Compatibility
+- bcryptjs uses Node.js APIs (process.nextTick, setImmediate) — it CANNOT run in Edge Runtime
+- Auth route handlers that use bcryptjs MUST set `export const runtime = 'nodejs'`
+- Next.js middleware runs in Edge Runtime by default — do NOT import bcryptjs there
+- For middleware auth checks, verify JWT/session tokens only (no password hashing)
+- Password hashing (bcryptjs) belongs in API route handlers or Server Actions, never in middleware
