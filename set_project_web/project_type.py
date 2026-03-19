@@ -1,12 +1,12 @@
-"""Web project type plugin for wt-tools."""
+"""Web project type plugin for SET (ShipExactlyThis)."""
 
 import json
 import subprocess
 from pathlib import Path
 from typing import List, Optional
 
-from wt_project_base import BaseProjectType
-from wt_project_base.base import (
+from set_project_base import BaseProjectType
+from set_project_base.base import (
     OrchestrationDirective,
     ProjectTypeInfo,
     TemplateInfo,

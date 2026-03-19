@@ -1,4 +1,4 @@
-When the user asks about wt-tools features, use this quick reference to answer. For deeper details, read the linked files or run `wt-<command> --help`.
+When the user asks about set-core features, use this quick reference to answer. For deeper details, read the linked files or run `wt-<command> --help`.
 
 ## CLI Commands
 
@@ -16,10 +16,10 @@ When the user asks about wt-tools features, use this quick reference to answer. 
 | `wt-project <command>` | Project management (init, deploy) |
 | `wt-openspec <command>` | OpenSpec CLI wrapper (status, init, update) |
 | `wt-usage` | Show Claude API usage and burn rate |
-| `wt-config <command>` | Configure wt-tools settings |
-| `wt-add [path]` | Add an existing git repo to wt-tools |
+| `wt-config <command>` | Configure set-core settings |
+| `wt-add [path]` | Add an existing git repo to set-core |
 | `wt-focus <change-id>` | Focus the editor window for a worktree |
-| `wt-version` | Display wt-tools version |
+| `wt-version` | Display set-core version |
 
 ## Skills (Slash Commands)
 
@@ -80,7 +80,7 @@ When the user asks about wt-tools features, use this quick reference to answer. 
 | `sync()` | Push + pull memory sync (git-based) |
 | `export_memories()` | Export all memories to JSON |
 
-### Worktree & Team (`wt-tools`)
+### Worktree & Team (`set-core`)
 
 | Tool | Description |
 |------|-------------|

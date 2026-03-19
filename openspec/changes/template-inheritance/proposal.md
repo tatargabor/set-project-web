@@ -23,9 +23,9 @@ Additionally, there's no safe update mechanism — re-running init skips existin
 
 ## Impact
 
-- **wt-project-base**: `deploy.py` — new `deploy_templates_with_inheritance()` function or extension of existing `deploy_templates()`, managed-file header detection logic
-- **wt-project-base**: `cli.py` — `deploy-templates` command gains `--update` mode that respects managed headers
-- **wt-project-base**: `base.py` — parent chain resolution helper (load parent type via entry points)
-- **wt-project-base**: `templates/default/` — new core rule files for base conventions
-- **wt-tools**: `bin/wt-project` — `_deploy_project_templates()` updated to pass parent chain or let Python handle it
-- **wt-project-web**: No code changes needed (inherits automatically via `parent: base` in ProjectTypeInfo)
+- **set-project-base**: `deploy.py` — new `deploy_templates_with_inheritance()` function or extension of existing `deploy_templates()`, managed-file header detection logic
+- **set-project-base**: `cli.py` — `deploy-templates` command gains `--update` mode that respects managed headers
+- **set-project-base**: `base.py` — parent chain resolution helper (load parent type via entry points)
+- **set-project-base**: `templates/default/` — new core rule files for base conventions
+- **set-core**: `bin/wt-project` — `_deploy_project_templates()` updated to pass parent chain or let Python handle it
+- **set-project-web**: No code changes needed (inherits automatically via `parent: base` in ProjectTypeInfo)

@@ -6,7 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from wt_project_web.project_type import WebProjectType
+from set_project_web.project_type import WebProjectType
 
 
 def _prompt_design_setup(target_dir: Path) -> None:
@@ -135,7 +135,7 @@ def init_project(
 def main() -> None:
     """Entry point for wt-project init command."""
     parser = argparse.ArgumentParser(
-        prog="wt-project-web",
+        prog="set-project-web",
         description="Scaffold web project knowledge files",
     )
     subparsers = parser.add_subparsers(dest="command")

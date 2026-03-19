@@ -3,19 +3,19 @@
 ### Requirement: Layered plugin hierarchy
 
 The system SHALL support a three-layer project-knowledge plugin hierarchy:
-1. **Base layer** (`wt-project-base`) — universal software project rules (code hygiene, git workflow, file size limits, documentation patterns)
-2. **Domain layer** (e.g., `wt-project-web`) — domain-specific rules (i18n, routing, DB migrations, component conventions)
+1. **Base layer** (`set-project-base`) — universal software project rules (code hygiene, git workflow, file size limits, documentation patterns)
+2. **Domain layer** (e.g., `set-project-web`) — domain-specific rules (i18n, routing, DB migrations, component conventions)
 3. **Custom layer** (e.g., `wt-project-acme`) — organization-specific rules and overrides
 
 Each layer SHALL inherit all rules from its parent layer and MAY override or extend them.
 
 #### Scenario: Domain plugin inherits base rules
-- **WHEN** a project uses `wt-project-web`
-- **THEN** all `wt-project-base` rules are automatically active
+- **WHEN** a project uses `set-project-web`
+- **THEN** all `set-project-base` rules are automatically active
 - **AND** web-specific rules are added on top
 
 #### Scenario: Custom plugin extends domain plugin
-- **WHEN** an organization creates `wt-project-acme` extending `wt-project-web`
+- **WHEN** an organization creates `wt-project-acme` extending `set-project-web`
 - **THEN** base + web rules are active
 - **AND** organization-specific overrides take precedence
 
@@ -36,7 +36,7 @@ Project knowledge SHALL be expressed as YAML configuration and Markdown files, N
 
 Consumer projects SHALL be able to extend a plugin template using an `extends` field in `project-knowledge.yaml`:
 ```yaml
-extends: wt-project-web/nextjs
+extends: set-project-web/nextjs
 ```
 
 The system SHALL merge the parent template with the consumer's overrides, where consumer values take precedence for any conflicting keys.
@@ -53,15 +53,15 @@ The system SHALL merge the parent template with the consumer's overrides, where 
 
 ### Requirement: Plugin discovery via Python entry points
 
-Project-knowledge plugins SHALL be discoverable via Python entry points under the group `wt_tools.project_types`. This extends the existing `wt_tools.plugins` mechanism.
+Project-knowledge plugins SHALL be discoverable via Python entry points under the group `set_tools.project_types`. This extends the existing `wt_tools.plugins` mechanism.
 
 ```toml
-[project.entry-points."wt_tools.project_types"]
-web = "wt_project_web:WebProjectType"
+[project.entry-points."set_tools.project_types"]
+web = "set_project_web:WebProjectType"
 ```
 
 #### Scenario: Plugin is discovered automatically
-- **WHEN** `wt-project-web` is installed as a Python package
+- **WHEN** `set-project-web` is installed as a Python package
 - **THEN** `wt-project init --type web-nextjs` can find and use its templates
 - **AND** no manual registration is needed
 

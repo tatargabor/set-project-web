@@ -64,10 +64,10 @@ The SPA template is intentionally minimal. Each section includes comments explai
 
 ```bash
 # Initialize with a template
-wt-project-web init --type nextjs --target /path/to/project
+set-project-web init --type nextjs --target /path/to/project
 
 # List available templates
-wt-project-web list
+set-project-web list
 ```
 
 After initialization, all files are yours to customize. The template is a starting point, not a constraint.

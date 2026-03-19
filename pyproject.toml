@@ -3,22 +3,22 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "wt-project-web"
+name = "set-project-web"
 version = "0.2.0"
-description = "Web project knowledge plugin for wt-tools"
+description = "Web project knowledge plugin for SET (ShipExactlyThis)"
 requires-python = ">=3.9"
-dependencies = ["wt-project-base"]
+dependencies = ["set-project-base"]
 
 [project.scripts]
-wt-project-web = "wt_project_web.cli:main"
+set-project-web = "set_project_web.cli:main"
 
-[project.entry-points."wt_tools.project_types"]
-web = "wt_project_web:WebProjectType"
+[project.entry-points."set_tools.project_types"]
+web = "set_project_web:WebProjectType"
 
 [tool.hatch.build.targets.wheel]
-packages = ["wt_project_web"]
+packages = ["set_project_web"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"wt_project_web/templates" = "wt_project_web/templates"
-"wt_project_web/directives" = "wt_project_web/directives"
-"wt_project_web/verification-rules" = "wt_project_web/verification-rules"
+"set_project_web/templates" = "set_project_web/templates"
+"set_project_web/directives" = "set_project_web/directives"
+"set_project_web/verification-rules" = "set_project_web/verification-rules"

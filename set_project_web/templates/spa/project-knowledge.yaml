@@ -40,5 +40,5 @@ features: {}
   #   description: Dashboard pages
 
 # Verification rule overrides — customize rules from the project type.
-# See: wt-project-base resolve --project-dir .
+# See: set-project-base resolve --project-dir .
 verification_overrides: {}

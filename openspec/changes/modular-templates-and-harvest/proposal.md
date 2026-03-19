@@ -7,7 +7,7 @@ Template deploy (`wt-project init --project-type web --template nextjs`) current
 - Add `manifest.yaml` to templates defining **core** (always deployed) and **optional modules** (deployed on request)
 - Update `deploy_templates()` to read the manifest and support module selection
 - Add `--modules` flag to `wt-project init` for CLI-based module selection
-- Track selected modules in `wt/plugins/project-type.yaml` so re-init deploys the same set
+- Track selected modules in `set/plugins/project-type.yaml` so re-init deploys the same set
 - Add a `harvest` skill that compares a source project's rules against the template, classifies candidates (base/web/skip), generalizes them, and writes them as optional modules
 
 ## Capabilities
@@ -21,7 +21,7 @@ Template deploy (`wt-project init --project-type web --template nextjs`) current
 
 ## Impact
 
-- `wt-project-base`: `deploy.py` updated to read manifest, new `harvest.py` module
-- `wt-project-web`: `manifest.yaml` added to nextjs and spa templates, existing rules categorized as core vs optional
+- `set-project-base`: `deploy.py` updated to read manifest, new `harvest.py` module
+- `set-project-web`: `manifest.yaml` added to nextjs and spa templates, existing rules categorized as core vs optional
 - `wt-project` bash script: `--modules` flag on init, module tracking in project-type.yaml
-- `wt-tools`: new `/wt:harvest` skill definition
+- `set-core`: new `/wt:harvest` skill definition

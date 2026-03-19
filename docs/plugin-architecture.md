@@ -3,8 +3,8 @@
 ## Three-Layer Hierarchy
 
 ```
-wt-project-base          Universal rules (file size, secrets, lockfile conflicts)
-  └── wt-project-web      Web domain rules (i18n, routing, DB, components)
+set-project-base          Universal rules (file size, secrets, lockfile conflicts)
+  └── set-project-web      Web domain rules (i18n, routing, DB, components)
         └── your-org-web   Organization-specific rules (your linter, your conventions)
 ```
 
@@ -18,8 +18,8 @@ Each project type is a Python package with an entry point:
 
 ```toml
 # pyproject.toml
-[project.entry-points."wt_tools.project_types"]
-web = "wt_project_web:WebProjectType"
+[project.entry-points."set_tools.project_types"]
+web = "set_project_web:WebProjectType"
 ```
 
 The class extends `BaseProjectType` and defines rules + directives:
@@ -34,7 +34,7 @@ class WebProjectType(BaseProjectType):
 
 ### 2. YAML overlay customizes per-project
 
-`wt/plugins/project-type.yaml` in each project:
+`set/plugins/project-type.yaml` in each project:
 
 ```yaml
 type: web
@@ -65,13 +65,13 @@ Package rules (base → web → custom-type)
   = FINAL RESOLVED SET
 ```
 
-View the final set: `wt-project-base resolve --project-dir .`
+View the final set: `set-project-base resolve --project-dir .`
 
 ## Creating a Custom Project Type
 
 ### Option A: YAML only (no Python)
 
-Just edit `wt/plugins/project-type.yaml` — add custom_rules, disable what you don't need. No package required.
+Just edit `set/plugins/project-type.yaml` — add custom_rules, disable what you don't need. No package required.
 
 ### Option B: Python package (reusable across projects)
 
@@ -81,7 +81,7 @@ mkdir my-project-type && cd my-project-type
 
 ```python
 # my_project_type/project_type.py
-from wt_project_base import BaseProjectType  # or WebProjectType
+from set_project_base import BaseProjectType  # or WebProjectType
 
 class MyProjectType(BaseProjectType):
     @property
@@ -94,7 +94,7 @@ class MyProjectType(BaseProjectType):
 
 ```toml
 # pyproject.toml
-[project.entry-points."wt_tools.project_types"]
+[project.entry-points."set_tools.project_types"]
 my-type = "my_project_type:MyProjectType"
 ```
 
@@ -105,7 +105,7 @@ wt-project init --project-type my-type
 
 ## Discovery
 
-Project types are discovered via Python entry points (`wt_tools.project_types`). Any installed package with this entry point is available:
+Project types are discovered via Python entry points (`set_tools.project_types`). Any installed package with this entry point is available:
 
 ```bash
 wt-project list-types
@@ -116,7 +116,7 @@ wt-project list-types
 Record anonymized feedback about rules:
 
 ```bash
-wt-project-base feedback record \
+set-project-base feedback record \
   --rule-id migration-safety \
   --issue false_positive \
   --context "Seed file changes trigger migration check" \
@@ -127,5 +127,5 @@ wt-project-base feedback record \
 Export for sharing upstream:
 
 ```bash
-wt-project-base feedback export --project-dir .
+set-project-base feedback export --project-dir .
 ```

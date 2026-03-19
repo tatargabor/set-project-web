@@ -1,5 +1,5 @@
-# Project type configuration — managed by wt-project init
-# Change with: wt-project init --project-type <type>
+# Project type configuration — managed by set-project init
+# Change with: set-project init --project-type <type>
 type: base
 version: 0.1.0
 description: "Universal project knowledge — rules and directives for any project"
@@ -15,7 +15,7 @@ custom_rules:
     check: file-exists
     severity: warning
     config:
-      pattern: "wt_project_*/[!_]*.py"
+      pattern: "set_project_*/[!_]*.py"
       required_sibling: "__init__.py"
 
 disabled_rules:

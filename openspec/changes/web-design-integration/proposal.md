@@ -1,6 +1,6 @@
 ## Why
 
-The wt-tools design-bridge provides infrastructure for design tool integration (detection, MCP config export, prompt enrichment), but consumer web projects have no automated way to set it up. Users must manually run `claude mcp add`, edit `orchestration.yaml`, and agents lack web-specific guidance on mapping design tokens to Tailwind or Figma components to shadcn/ui.
+The set-core design-bridge provides infrastructure for design tool integration (detection, MCP config export, prompt enrichment), but consumer web projects have no automated way to set it up. Users must manually run `claude mcp add`, edit `orchestration.yaml`, and agents lack web-specific guidance on mapping design tokens to Tailwind or Figma components to shadcn/ui.
 
 ## What Changes
 
@@ -19,9 +19,9 @@ The wt-tools design-bridge provides infrastructure for design tool integration (
 
 ## Impact
 
-- `wt_project_web/cli.py` — new interactive design setup step during `init`
-- `wt_project_web/templates/nextjs/rules/design-integration.md` — new file
-- `wt_project_web/templates/nextjs/project-knowledge.yaml` — new `design` entry
-- `wt_project_web/templates/spa/rules/design-integration.md` — new file
-- `wt_project_web/templates/spa/project-knowledge.yaml` — new `design` entry
-- No changes to wt-tools — the bridge.sh infrastructure stays as-is
+- `set_project_web/cli.py` — new interactive design setup step during `init`
+- `set_project_web/templates/nextjs/rules/design-integration.md` — new file
+- `set_project_web/templates/nextjs/project-knowledge.yaml` — new `design` entry
+- `set_project_web/templates/spa/rules/design-integration.md` — new file
+- `set_project_web/templates/spa/project-knowledge.yaml` — new `design` entry
+- No changes to set-core — the bridge.sh infrastructure stays as-is

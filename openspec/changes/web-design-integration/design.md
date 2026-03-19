@@ -1,6 +1,6 @@
 ## Context
 
-The wt-tools design-bridge (`lib/design/bridge.sh`) provides generic infrastructure: detecting design MCP servers in `.claude/settings.json`, exporting config for `run_claude --mcp-config`, and generating design-aware prompt sections for the planner. This works for any project type — the detection patterns (figma, penpot, sketch, zeplin) are universal.
+The set-core design-bridge (`lib/design/bridge.sh`) provides generic infrastructure: detecting design MCP servers in `.claude/settings.json`, exporting config for `run_claude --mcp-config`, and generating design-aware prompt sections for the planner. This works for any project type — the detection patterns (figma, penpot, sketch, zeplin) are universal.
 
 However, consumer web projects currently have no automated way to:
 1. Register a design MCP server during project init
@@ -10,12 +10,12 @@ However, consumer web projects currently have no automated way to:
 ## Goals / Non-Goals
 
 **Goals:**
-- Automated design tool setup during `wt-project-web init` (interactive prompt → MCP registration + orchestration.yaml)
+- Automated design tool setup during `set-project-web init` (interactive prompt → MCP registration + orchestration.yaml)
 - Web-specific design integration rule templates for both nextjs and spa templates
 - Design-related cross-cutting file entries in project-knowledge.yaml
 
 **Non-Goals:**
-- Modifying the wt-tools bridge.sh — the core infrastructure stays as-is
+- Modifying the set-core bridge.sh — the core infrastructure stays as-is
 - Supporting non-MCP design integrations (e.g., direct Figma REST API)
 - Auto-generating code from design files — agents query the design tool at runtime
 
@@ -43,10 +43,10 @@ Each template gets its own `rules/design-integration.md` with path-scoped activa
 
 ### D4: Optional — skip silently if user declines
 
-If the user answers "no" to the Figma prompt, init proceeds normally with no design-related side effects. The rule template is still deployed (it's part of the template), but without an MCP server registered, the wt-tools bridge self-gates and agents ignore the design rule.
+If the user answers "no" to the Figma prompt, init proceeds normally with no design-related side effects. The rule template is still deployed (it's part of the template), but without an MCP server registered, the set-core bridge self-gates and agents ignore the design rule.
 
 ## Risks / Trade-offs
 
 - **[Figma MCP URL may change]** → The URL `https://mcp.figma.com/mcp` is hardcoded. If Figma changes it, the init command needs updating. Mitigation: the URL is in one place (cli.py), easy to update.
-- **[`claude` CLI must be on PATH]** → `claude mcp add` requires the Claude CLI to be installed. Mitigation: this is a wt-tools project — Claude CLI is a prerequisite. Fail gracefully with a helpful error message if not found.
+- **[`claude` CLI must be on PATH]** → `claude mcp add` requires the Claude CLI to be installed. Mitigation: this is a set-core project — Claude CLI is a prerequisite. Fail gracefully with a helpful error message if not found.
 - **[Penpot/Sketch/Zeplin not covered in init]** → Only Figma has a known public MCP endpoint. Mitigation: the prompt can be extended later for other tools. The rule template is tool-agnostic ("query the design tool"), only init is Figma-specific for now.

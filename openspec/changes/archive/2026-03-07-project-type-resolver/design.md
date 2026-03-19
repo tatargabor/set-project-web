@@ -1,12 +1,12 @@
 ## Context
 
-wt-project-base defines `ProjectType` ABC and `BaseProjectType`. wt-project-web extends it with `WebProjectType`. Companies install these packages and run `wt-project init --project-type web` which writes `wt/plugins/project-type.yaml`.
+set-project-base defines `ProjectType` ABC and `BaseProjectType`. set-project-web extends it with `WebProjectType`. Companies install these packages and run `wt-project init --project-type web` which writes `set/plugins/project-type.yaml`.
 
 Currently the YAML only stores metadata (type name, version). Rules and directives come exclusively from the Python package — no local customization possible without forking.
 
-The resolver and feedback system both live in **wt-project-base** because they're universal — any project type (base, web, future custom types) needs them.
+The resolver and feedback system both live in **set-project-base** because they're universal — any project type (base, web, future custom types) needs them.
 
-We work from **wt-project-web** repo but the code goes into `/home/tg/code2/wt-project-base/`.
+We work from **set-project-web** repo but the code goes into `/home/tg/code2/set-project-base/`.
 
 ## Goals / Non-Goals
 
@@ -25,17 +25,17 @@ We work from **wt-project-web** repo but the code goes into `/home/tg/code2/wt-p
 
 ## Decisions
 
-### D1: Resolver lives in wt-project-base, not wt-tools
+### D1: Resolver lives in set-project-base, not set-core
 
-**Choice**: `wt_project_base/resolver.py`
+**Choice**: `set_project_base/resolver.py`
 
-**Why**: The resolver needs to import `ProjectType`, `VerificationRule`, etc. These are Python classes in wt-project-base. Keeping resolver in the same package avoids circular dependencies. wt-tools (bash) calls it via `_wt_python` helper.
+**Why**: The resolver needs to import `ProjectType`, `VerificationRule`, etc. These are Python classes in set-project-base. Keeping resolver in the same package avoids circular dependencies. set-core (bash) calls it via `_wt_python` helper.
 
-**Alternative**: Put resolver in wt-tools as bash/jq. Rejected — YAML parsing + Python class merging is much cleaner in Python.
+**Alternative**: Put resolver in set-core as bash/jq. Rejected — YAML parsing + Python class merging is much cleaner in Python.
 
 ### D2: Single YAML file with managed + custom sections
 
-**Choice**: Extend `wt/plugins/project-type.yaml` with custom sections below the managed header.
+**Choice**: Extend `set/plugins/project-type.yaml` with custom sections below the managed header.
 
 ```yaml
 # === Managed by wt-project init (do not edit above) ===
@@ -88,7 +88,7 @@ Package rules (BaseProjectType → WebProjectType → CegxType)
 
 ### D5: `.local-overrides.yaml` for personal (gitignored) customizations
 
-**Choice**: Optional `wt/plugins/.local-overrides.yaml` with same format, applied after `project-type.yaml`.
+**Choice**: Optional `set/plugins/.local-overrides.yaml` with same format, applied after `project-type.yaml`.
 
 **Why**: Developer might want to temporarily disable a rule locally without affecting the team.
 

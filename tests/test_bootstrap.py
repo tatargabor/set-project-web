@@ -7,7 +7,7 @@ from unittest.mock import patch, call
 
 import pytest
 
-from wt_project_web.project_type import WebProjectType
+from set_project_web.project_type import WebProjectType
 
 
 @pytest.fixture
@@ -29,7 +29,7 @@ class TestPrismaGenerate:
         (wt / "prisma").mkdir()
         (wt / "prisma" / "schema.prisma").write_text("model User { id Int @id }")
 
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             mock_run.return_value = subprocess.CompletedProcess([], 0)
             web.bootstrap_worktree(str(wt), str(wt))
 
@@ -40,7 +40,7 @@ class TestPrismaGenerate:
         assert args[1]["timeout"] == 60
 
     def test_skipped_when_no_schema(self, web, wt):
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             mock_run.return_value = subprocess.CompletedProcess([], 0)
             web.bootstrap_worktree(str(wt), str(wt))
 
@@ -51,7 +51,7 @@ class TestPrismaGenerate:
         (wt / "prisma").mkdir()
         (wt / "prisma" / "schema.prisma").write_text("model User { id Int @id }")
 
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             def side_effect(*args, **kwargs):
                 if "prisma" in str(args):
                     raise subprocess.TimeoutExpired(cmd="prisma", timeout=60)
@@ -69,7 +69,7 @@ class TestPlaywrightInstall:
         pkg["devDependencies"]["@playwright/test"] = "^1.40.0"
         (wt / "package.json").write_text(json.dumps(pkg))
 
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             mock_run.return_value = subprocess.CompletedProcess([], 0)
             web.bootstrap_worktree(str(wt), str(wt))
 
@@ -80,7 +80,7 @@ class TestPlaywrightInstall:
         assert args[1]["timeout"] == 120
 
     def test_skipped_when_not_in_devdeps(self, web, wt):
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             mock_run.return_value = subprocess.CompletedProcess([], 0)
             web.bootstrap_worktree(str(wt), str(wt))
 
@@ -92,7 +92,7 @@ class TestPlaywrightInstall:
         pkg["devDependencies"]["@playwright/test"] = "^1.40.0"
         (wt / "package.json").write_text(json.dumps(pkg))
 
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             def side_effect(*args, **kwargs):
                 if "playwright" in str(args):
                     raise OSError("playwright not found")
@@ -112,7 +112,7 @@ class TestBootstrapOrder:
         pkg["devDependencies"]["@playwright/test"] = "^1.40.0"
         (wt / "package.json").write_text(json.dumps(pkg))
 
-        with patch("wt_project_web.project_type.subprocess.run") as mock_run:
+        with patch("set_project_web.project_type.subprocess.run") as mock_run:
             mock_run.return_value = subprocess.CompletedProcess([], 0)
             web.bootstrap_worktree(str(wt), str(wt))
 

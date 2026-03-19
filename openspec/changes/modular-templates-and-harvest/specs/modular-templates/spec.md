@@ -45,7 +45,7 @@ modules:
 - **THEN** a warning is printed listing available modules, and `foo` is skipped
 
 ### Requirement: Module tracking in project-type.yaml
-Selected modules SHALL be persisted in `wt/plugins/project-type.yaml` under a `modules` key.
+Selected modules SHALL be persisted in `set/plugins/project-type.yaml` under a `modules` key.
 
 #### Scenario: Modules saved on first init
 - **WHEN** user selects modules during init

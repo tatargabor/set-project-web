@@ -1,6 +1,6 @@
 ## Context
 
-The wt-tools ecosystem orchestrates AI-driven parallel development across git worktrees. It is project-type-agnostic — it manages worktrees, OpenSpec workflows, and agent coordination but has zero domain knowledge about what kind of project it's operating on.
+The set-core ecosystem orchestrates AI-driven parallel development across git worktrees. It is project-type-agnostic — it manages worktrees, OpenSpec workflows, and agent coordination but has zero domain knowledge about what kind of project it's operating on.
 
 Production experience with a Next.js SaaS application (10+ orchestration cycles, 50+ changes merged) has revealed recurring failure patterns that are predictable and preventable with domain-specific knowledge:
 
@@ -10,7 +10,7 @@ Production experience with a Next.js SaaS application (10+ orchestration cycles,
 - **Migration ordering**: DB schema changes deployed before migrations run
 - **Convention violations**: Wrong button variants, oversized files, direct SDK calls instead of wrappers
 
-These are not bugs in wt-tools — they are gaps in domain knowledge. A project-knowledge plugin system fills these gaps.
+These are not bugs in set-core — they are gaps in domain knowledge. A project-knowledge plugin system fills these gaps.
 
 Currently, this knowledge lives as ad-hoc `.claude/rules/` files and CLAUDE.md sections in each consumer project. There is no standardization, no template system, and no way to share learnings across projects.
 
@@ -25,7 +25,7 @@ Currently, this knowledge lives as ad-hoc `.claude/rules/` files and CLAUDE.md s
 - Design the extension point for third-party/organization-specific project types
 
 **Non-Goals:**
-- Implementing the wt-tools core plugin loader changes (that happens in wt-tools repo)
+- Implementing the set-core core plugin loader changes (that happens in set-core repo)
 - Runtime code execution or linting — this is knowledge/configuration, not tooling
 - Framework-specific code generators (e.g., scaffolding Next.js components)
 - Replacing existing `.claude/rules/` mechanism — we build on top of it
@@ -35,8 +35,8 @@ Currently, this knowledge lives as ad-hoc `.claude/rules/` files and CLAUDE.md s
 ### 1. Three-layer plugin hierarchy
 
 ```
-wt-project-base          (common to all software projects)
-  ├── wt-project-web      (web applications: i18n, routing, DB, components)
+set-project-base          (common to all software projects)
+  ├── set-project-web      (web applications: i18n, routing, DB, components)
   ├── wt-project-mobile   (future: mobile apps)
   ├── wt-project-cli      (future: CLI tools)
   └── wt-project-custom   (organization-specific extensions)
@@ -56,13 +56,13 @@ Project knowledge is expressed as YAML configuration and Markdown templates, not
 
 **Rationale**: Consumer projects are typically JS/TS. Requiring Python knowledge to customize project rules creates an unnecessary barrier. YAML/Markdown is universally editable.
 
-**Alternative considered**: Python plugin classes with `verify()` methods → rejected for the barrier reason above, but the wt-tools plugin base class (`Plugin`) remains the delivery mechanism.
+**Alternative considered**: Python plugin classes with `verify()` methods → rejected for the barrier reason above, but the set-core plugin base class (`Plugin`) remains the delivery mechanism.
 
 ### 3. Template inheritance via `extends` field
 
 ```yaml
 # project-knowledge.yaml in a consumer project
-extends: wt-project-web/nextjs
+extends: set-project-web/nextjs
 # overrides and additions below...
 ```
 
@@ -87,7 +87,7 @@ rules:
     severity: warning
 ```
 
-**Rationale**: Declarative rules are inspectable, composable, and don't require a runtime. The verification engine in wt-tools interprets them — the plugin only provides the rule definitions.
+**Rationale**: Declarative rules are inspectable, composable, and don't require a runtime. The verification engine in set-core interprets them — the plugin only provides the rule definitions.
 
 **Alternative considered**: Bash scripts per check → rejected because they're not composable and hard to override in consumer projects.
 
@@ -106,7 +106,7 @@ directives:
     action: warn("Consider merging i18n changes into a single change")
 ```
 
-**Rationale**: Production experience showed that i18n merge conflicts wasted 2.5+ hours in a single orchestration run. Declarative directives let the orchestrator prevent these patterns without hard-coding them in wt-tools core.
+**Rationale**: Production experience showed that i18n merge conflicts wasted 2.5+ hours in a single orchestration run. Declarative directives let the orchestrator prevent these patterns without hard-coding them in set-core core.
 
 ### 6. Delivery via `wt-project init`
 
@@ -132,12 +132,12 @@ wt-project init --type web-nextjs
 **[Verification false positives]** → Rules may flag legitimate exceptions (e.g., a page that intentionally has no sidebar entry).
 *Mitigation*: Per-rule `ignore` lists in `verification-rules.yaml`. Severity levels (error vs warning).
 
-**[Plugin dependency on wt-tools changes]** → The plugin architecture needs wt-tools core to support project-knowledge plugins.
+**[Plugin dependency on set-core changes]** → The plugin architecture needs set-core core to support project-knowledge plugins.
 *Mitigation*: Phase 1 deliverables (templates, rules files, documentation) are usable immediately as static files. Plugin loading integration is Phase 2.
 
 ## Open Questions
 
-1. **Should `wt-project-base` live in its own repo or inside wt-tools?** — Leaning toward wt-tools (it's small and tightly coupled to core), but domain plugins (web, mobile) should be separate repos.
+1. **Should `set-project-base` live in its own repo or inside set-core?** — Leaning toward set-core (it's small and tightly coupled to core), but domain plugins (web, mobile) should be separate repos.
 
 2. **How do verification rules interact with existing smoke tests?** — Verification rules run during `opsx:verify` (pre-merge), smoke tests run post-merge. They complement each other but the boundary needs to be clear.
 

@@ -5,13 +5,13 @@
 The `init` command SHALL prompt the user: "Do you have a Figma design file? (y/n)". If the user answers yes, the system SHALL prompt for the Figma file URL.
 
 #### Scenario: User provides Figma URL
-- **WHEN** user runs `wt-project-web init --type nextjs` and answers "yes" to the Figma prompt
+- **WHEN** user runs `set-project-web init --type nextjs` and answers "yes" to the Figma prompt
 - **AND** provides a URL like `https://www.figma.com/file/ABC123/MyProject`
 - **THEN** the system registers the Figma MCP server
 - **AND** writes `design_file: <url>` to `.claude/orchestration.yaml` in the target directory
 
 #### Scenario: User declines design setup
-- **WHEN** user runs `wt-project-web init --type nextjs` and answers "no" to the Figma prompt
+- **WHEN** user runs `set-project-web init --type nextjs` and answers "no" to the Figma prompt
 - **THEN** no MCP registration occurs
 - **AND** no `orchestration.yaml` is created or modified
 - **AND** init proceeds normally with all other template files

@@ -5,12 +5,12 @@ Show what all agents are currently working on.
 **What to do**:
 
 1. **Gather local activity** — Read `.claude/activity.json` from all worktrees across all projects:
-   - Get projects from `~/.config/wt-tools/projects.json`
+   - Get projects from `~/.config/set-core/projects.json`
    - For each project, run `git worktree list --porcelain` to find all worktree paths
    - Read `.claude/activity.json` from each worktree (if it exists)
    - These are LOCAL agents (same machine), no "(remote)" tag
 
-2. **Gather remote activity** — Read team cache from `~/.cache/wt-tools/team_status.json`:
+2. **Gather remote activity** — Read team cache from `~/.cache/set-core/team_status.json`:
    - Parse members array
    - Skip members whose name matches the local machine's member name (to avoid duplicates)
    - These are REMOTE agents, tag with "(remote)"
@@ -51,4 +51,4 @@ AGENT ACTIVITY
    - < 24h: "N hours ago"
    - else: the raw timestamp
 
-**Use the MCP tool** `get_activity()` (from the wt-tools MCP server) for local activity if available. Otherwise fall back to direct file reads.
+**Use the MCP tool** `get_activity()` (from the set-core MCP server) for local activity if available. Otherwise fall back to direct file reads.

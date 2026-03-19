@@ -2,7 +2,7 @@
 
 ## Web-Specific Rules
 
-These rules are provided by `wt-project-web` on top of the base rules.
+These rules are provided by `set-project-web` on top of the base rules.
 
 ### i18n-completeness (error)
 All locale files must contain the same set of translation keys.
@@ -44,7 +44,7 @@ Ghost buttons must be icon-only — no text content allowed.
 
 ## Base Rules (inherited)
 
-These come from `wt-project-base` and apply to all project types.
+These come from `set-project-base` and apply to all project types.
 
 ### file-size-limit (warning)
 Source files should not exceed 400 lines.
@@ -61,4 +61,4 @@ See `verification-rules/SCHEMA.md` for the full schema documentation including a
 
 ## Customization
 
-See [Plugin Architecture](plugin-architecture.md) for how to add custom rules, disable rules, or override rule configuration via `wt/plugins/project-type.yaml`.
+See [Plugin Architecture](plugin-architecture.md) for how to add custom rules, disable rules, or override rule configuration via `set/plugins/project-type.yaml`.

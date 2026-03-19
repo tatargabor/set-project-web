@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Resolve rules from package and YAML overlay
-The ProjectTypeResolver SHALL load verification rules from the installed ProjectType package and merge them with customizations from `wt/plugins/project-type.yaml`. The final resolved set SHALL be: package rules + custom_rules - disabled_rules, with rule_overrides applied.
+The ProjectTypeResolver SHALL load verification rules from the installed ProjectType package and merge them with customizations from `set/plugins/project-type.yaml`. The final resolved set SHALL be: package rules + custom_rules - disabled_rules, with rule_overrides applied.
 
 #### Scenario: Package rules only (no overlay)
 - **WHEN** a project has `type: web` in project-type.yaml with no custom sections
@@ -35,7 +35,7 @@ The ProjectTypeResolver SHALL apply the same merge logic to orchestration direct
 - **THEN** resolver returns all package directives except `install-deps-python`
 
 ### Requirement: Local overrides file
-The resolver SHALL check for `wt/plugins/.local-overrides.yaml` and apply it as a final layer after project-type.yaml. This file uses the same format (custom_rules, disabled_rules, rule_overrides, custom_directives, disabled_directives).
+The resolver SHALL check for `set/plugins/.local-overrides.yaml` and apply it as a final layer after project-type.yaml. This file uses the same format (custom_rules, disabled_rules, rule_overrides, custom_directives, disabled_directives).
 
 #### Scenario: Local override disables a rule
 - **WHEN** `.local-overrides.yaml` contains `disabled_rules: ["todo-tracking"]`
@@ -53,10 +53,10 @@ The resolver SHALL provide a `summary()` method returning counts: total rules, f
 - **THEN** summary returns `{ total: 9, from_package: 8, custom: 2, disabled: 1, overridden: 1 }`
 
 ### Requirement: CLI resolve command
-`wt-project-base resolve` SHALL accept a `--project-dir` argument, load the project type and overlay, and print the final resolved rules and directives.
+`set-project-base resolve` SHALL accept a `--project-dir` argument, load the project type and overlay, and print the final resolved rules and directives.
 
 #### Scenario: Resolve with project dir
-- **WHEN** user runs `wt-project-base resolve --project-dir /path/to/project`
+- **WHEN** user runs `set-project-base resolve --project-dir /path/to/project`
 - **THEN** CLI prints each resolved rule and directive with source annotation (package/custom/overridden)
 
 ### Requirement: Backward compatibility

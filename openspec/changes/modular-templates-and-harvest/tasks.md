@@ -4,7 +4,7 @@
 - [x] 1.2 Create `manifest.yaml` for the spa template (all files as core, no optional modules yet)
 - [x] 1.3 Create `manifest.yaml` for the base/default template — `data-privacy.md` as optional module
 
-## 2. Deploy Logic Updates (wt-project-base)
+## 2. Deploy Logic Updates (set-project-base)
 
 - [x] 2.1 Update `deploy_templates()` to detect and parse `manifest.yaml` — if present, build file list from core + selected modules; if absent, walk all files (backward compat)
 - [x] 2.2 Add `modules` parameter to `deploy_templates()` function signature
@@ -17,13 +17,13 @@
 - [x] 3.1 Add `--modules` flag parsing to `cmd_init` in wt-project bash script
 - [x] 3.2 Pass `--modules` to `_deploy_project_templates()` when specified
 - [x] 3.3 Interactive module selection: when modules not specified and optional modules exist, prompt user with available modules and accept comma-separated input
-- [x] 3.4 Save selected modules to `wt/plugins/project-type.yaml` under `modules` key
+- [x] 3.4 Save selected modules to `set/plugins/project-type.yaml` under `modules` key
 - [x] 3.5 On re-init, read tracked modules from `project-type.yaml` and pass to deploy (skip prompt)
 - [x] 3.6 Update `_save_project_type()` to include `template` and `modules` fields
 
 ## 4. Harvest Skill
 
-- [x] 4.1 Create `/wt:harvest` skill definition in wt-tools (`skills/wt/harvest/SKILL.md`)
+- [x] 4.1 Create `/wt:harvest` skill definition in set-core (`skills/wt/harvest/SKILL.md`)
 - [x] 4.2 Skill logic: read source project `.claude/rules/*.md`, diff against template manifest (core + modules), identify new/richer candidates
 - [x] 4.3 Skill logic: for each candidate, classify as base/web/skip based on content analysis
 - [x] 4.4 Skill logic: generalize candidates — strip project-specific paths, entity names, API references

@@ -12,21 +12,21 @@ Feedback lessons SHALL use a fixed YAML schema with fields: `rule_id`, `issue` (
 - **THEN** the schema SHALL NOT include fields for project name, company name, or absolute file paths
 
 ### Requirement: Feedback record CLI
-`wt-project-base feedback record` SHALL interactively prompt for rule_id (with autocomplete from resolved rules), issue type, context, and suggested fix, then append to `wt/knowledge/lessons/rule-feedback.yaml`.
+`set-project-base feedback record` SHALL interactively prompt for rule_id (with autocomplete from resolved rules), issue type, context, and suggested fix, then append to `wt/knowledge/lessons/rule-feedback.yaml`.
 
 #### Scenario: Interactive recording
-- **WHEN** user runs `wt-project-base feedback record --project-dir /path/to/project`
+- **WHEN** user runs `set-project-base feedback record --project-dir /path/to/project`
 - **THEN** CLI lists available rule IDs from the resolved set, prompts for issue type from the enum, asks for context and suggested fix, then appends the lesson
 
 #### Scenario: Non-interactive recording
-- **WHEN** user runs `wt-project-base feedback record --rule-id migration-safety --issue false_positive --context "Seed changes trigger check" --fix-type add_exclude --fix-value "**/seed.*"`
+- **WHEN** user runs `set-project-base feedback record --rule-id migration-safety --issue false_positive --context "Seed changes trigger check" --fix-type add_exclude --fix-value "**/seed.*"`
 - **THEN** CLI appends the lesson without prompting
 
 ### Requirement: Feedback export
-`wt-project-base feedback export` SHALL read all lessons from `wt/knowledge/lessons/rule-feedback.yaml`, validate they contain no project-specific information, and output anonymized YAML suitable for sharing as upstream PR or issue.
+`set-project-base feedback export` SHALL read all lessons from `wt/knowledge/lessons/rule-feedback.yaml`, validate they contain no project-specific information, and output anonymized YAML suitable for sharing as upstream PR or issue.
 
 #### Scenario: Export produces clean YAML
-- **WHEN** user runs `wt-project-base feedback export --project-dir /path/to/project`
+- **WHEN** user runs `set-project-base feedback export --project-dir /path/to/project`
 - **THEN** CLI outputs YAML with header comment explaining the format, each lesson entry, and no project-identifying information
 
 #### Scenario: Export warns on potentially identifying content

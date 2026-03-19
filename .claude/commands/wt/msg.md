@@ -8,7 +8,7 @@ Send a directed message to another agent or team member.
 
 1. Parse the arguments: first word is recipient, rest is the message
 2. Find the project's `.wt-control` worktree path:
-   - Get the current project from `~/.config/wt-tools/projects.json`
+   - Get the current project from `~/.config/set-core/projects.json`
    - The control worktree is at `<project_path>/.wt-control`
 3. Run the send command with `--no-push` (message will be delivered on next sync cycle):
    ```bash

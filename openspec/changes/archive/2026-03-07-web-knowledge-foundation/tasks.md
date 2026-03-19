@@ -1,6 +1,6 @@
 ## 1. Project Structure and Base Configuration
 
-- [x] 1.1 Create the `wt-project-web` Python package structure (`pyproject.toml`, `wt_project_web/__init__.py`, entry point registration under `wt_tools.project_types`)
+- [x] 1.1 Create the `set-project-web` Python package structure (`pyproject.toml`, `set_project_web/__init__.py`, entry point registration under `set_tools.project_types`)
 - [x] 1.2 Define the `ProjectType` base class interface in a shared module — `info`, `get_templates()`, `get_verification_rules()`, `get_orchestration_directives()` methods
 - [x] 1.3 Implement `WebProjectType` class that extends `ProjectType` with web-specific template discovery
 - [x] 1.4 Create the `wt-project init --type <type>` CLI command that scaffolds files from a template into the consumer project

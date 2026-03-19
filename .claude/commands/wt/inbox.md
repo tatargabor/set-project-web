@@ -5,7 +5,7 @@ Read incoming messages directed to this agent.
 **What to do**:
 
 1. Find the project's `.wt-control` worktree path:
-   - Get the current project from `~/.config/wt-tools/projects.json`
+   - Get the current project from `~/.config/set-core/projects.json`
    - The control worktree is at `<project_path>/.wt-control`
 
 2. Read messages using the CLI:

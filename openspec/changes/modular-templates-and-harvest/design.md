@@ -1,6 +1,6 @@
 ## Context
 
-`deploy_templates()` in wt-project-base currently walks the entire template directory and copies all files. There's no concept of "optional" — every file in the template goes to every project.
+`deploy_templates()` in set-project-base currently walks the entire template directory and copies all files. There's no concept of "optional" — every file in the template goes to every project.
 
 Production projects accumulate domain-specific rules (GDPR, integrations, email) that are valuable to generalize, but pushing them into the template means all projects get them. We need a selection layer.
 
@@ -64,7 +64,7 @@ Since `wt-project init` is a bash script without TUI, the interactive path print
 
 ### D3: Module tracking
 
-Selected modules stored in `wt/plugins/project-type.yaml`:
+Selected modules stored in `set/plugins/project-type.yaml`:
 ```yaml
 type: web
 version: 0.1.0

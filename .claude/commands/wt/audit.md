@@ -18,7 +18,7 @@ Scan project health and interactively address gaps.
 
 4. When addressing a gap:
    - Read the source files listed in the guidance
-   - Read `lib/audit/reference.md` from the wt-tools repo for the category description
+   - Read `lib/audit/reference.md` from the set-core repo for the category description
    - Create project-specific content based on what you find in the ACTUAL codebase
    - Do NOT use templates — read code, document patterns you discover
 

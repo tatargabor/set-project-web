@@ -4,7 +4,7 @@ Template deployment currently operates on a single project type — `deploy_temp
 
 Additionally, template files are deployed additive-only (skip if exists). Once deployed, they never update — even when the template packages are upgraded. There's no mechanism to distinguish "user customized this file" from "this file was deployed and never touched."
 
-Three repos are involved: `wt-project-base` (deploy logic + base templates), `wt-project-web` (web templates), `wt-tools` (bash CLI).
+Three repos are involved: `set-project-base` (deploy logic + base templates), `set-project-web` (web templates), `set-core` (bash CLI).
 
 ## Goals / Non-Goals
 

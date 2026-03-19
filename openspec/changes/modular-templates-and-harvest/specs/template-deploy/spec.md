@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: Python deploy-templates command
-The `wt-project-base` CLI `deploy-templates` subcommand SHALL support an optional `--modules` parameter (comma-separated list of module IDs). When a `manifest.yaml` exists in the template, only core files and files from selected modules are deployed.
+The `set-project-base` CLI `deploy-templates` subcommand SHALL support an optional `--modules` parameter (comma-separated list of module IDs). When a `manifest.yaml` exists in the template, only core files and files from selected modules are deployed.
 
 Arguments (updated):
 - `--project-dir` (required): target project directory
@@ -24,7 +24,7 @@ Arguments (updated):
 - **THEN** all files in the template directory are deployed (unchanged behavior)
 
 #### Scenario: Deploy to new project
-- **WHEN** `wt-project-base deploy-templates --project-dir /tmp/myapp --type web --template nextjs` is run and no target files exist
+- **WHEN** `set-project-base deploy-templates --project-dir /tmp/myapp --type web --template nextjs` is run and no target files exist
 - **THEN** all template files are copied to the target, preserving relative paths (project-knowledge.yaml → wt/knowledge/project-knowledge.yaml, rules/*.md → .claude/rules/*.md)
 
 #### Scenario: Deploy to existing project (additive)

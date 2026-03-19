@@ -1,10 +1,10 @@
-"""Re-export base classes from wt-project-base.
+"""Re-export base classes from set-project-base.
 
-All base classes and dataclasses are defined in wt-project-base.
+All base classes and dataclasses are defined in set-project-base.
 This module re-exports them for backward compatibility.
 """
 
-from wt_project_base.base import (
+from set_project_base.base import (
     OrchestrationDirective,
     ProjectType,
     ProjectTypeInfo,

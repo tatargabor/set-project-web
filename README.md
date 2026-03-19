@@ -1,6 +1,6 @@
-# wt-project-web
+# set-project-web
 
-Web project type plugin for [wt-tools](https://github.com/tatargabor/wt-tools). Provides web-specific verification rules, orchestration directives, design integration, and project templates on top of [wt-project-base](https://github.com/tatargabor/wt-project-base).
+Web project type plugin for [set-core](https://github.com/tatargabor/set-core). Provides web-specific verification rules, orchestration directives, design integration, and project templates on top of [set-project-base](https://github.com/tatargabor/set-project-base).
 
 > **Status:** Experimental / active development. Built for AI-assisted web projects and shared as a direction for others. The conventions reflect real-world production usage with AI agents across multiple projects. Contributions, forks, and feedback are welcome.
 
@@ -20,7 +20,7 @@ A capable model like Claude already knows SEO best practices, accessibility stan
 
 ## What Problem It Solves
 
-When an orchestrator (like wt-tools) spins up multiple AI agents to build a web application in parallel, each agent needs to know:
+When an orchestrator (like set-core) spins up multiple AI agents to build a web application in parallel, each agent needs to know:
 
 - **What conventions to follow** — path-scoped rule files activate only when the agent touches relevant files
 - **What to verify before merging** — automated checks catch missing alt text, unsynced locale files, or schema changes without migrations
@@ -68,7 +68,7 @@ When an orchestrator (like wt-tools) spins up multiple AI agents to build a web 
 | `error-boundary-exists` | warning | App must have error.tsx, global-error.tsx, not-found.tsx |
 | `no-public-secrets` | error | NEXT_PUBLIC_ must not prefix secret-like vars |
 
-Plus base rules from `wt-project-base` (file-size-limit, no-secrets-in-source, todo-tracking).
+Plus base rules from `set-project-base` (file-size-limit, no-secrets-in-source, todo-tracking).
 
 ### Orchestration Directives (7 web-specific)
 
@@ -82,7 +82,7 @@ Plus base rules from `wt-project-base` (file-size-limit, no-secrets-in-source, t
 | `playwright-setup` | warn | First Playwright test file created |
 | `env-example-review` | flag-for-review | .env.example modifications |
 
-Plus base directives from `wt-project-base` (install-deps, no-parallel-lockfile, config-review).
+Plus base directives from `set-project-base` (install-deps, no-parallel-lockfile, config-review).
 
 ### Gate Overrides (per-change-type verification)
 
@@ -101,11 +101,11 @@ The `design-integration.md` rule and Figma support enable design-driven developm
 - **Figma source files** in `docs/figma-raw/` — component hierarchy, mock data, icon usage
 - **Design tokens** mapped to `tailwind.config.ts` — colors, spacing, typography, radius
 - **Component mapping** to shadcn/ui — design components mapped to implementation primitives
-- **Automatic setup** — `wt-project-web init --type nextjs` prompts for Figma file URL and registers the MCP server
+- **Automatic setup** — `set-project-web init --type nextjs` prompts for Figma file URL and registers the MCP server
 
 ### Engine Integration (Profile Methods)
 
-These methods are called by the wt-tools orchestration engine:
+These methods are called by the set-core orchestration engine:
 
 | Method | What it does |
 |--------|-------------|
@@ -125,13 +125,13 @@ These methods are called by the wt-tools orchestration engine:
 
 ```bash
 # Install
-pip install wt-project-web
+pip install set-project-web
 
 # Initialize a Next.js project (with optional Figma setup)
-wt-project-web init --type nextjs --target /path/to/project
+set-project-web init --type nextjs --target /path/to/project
 
 # List available templates
-wt-project-web list
+set-project-web list
 ```
 
 ## Design Principles
@@ -144,12 +144,12 @@ wt-project-web list
 ## Plugin Architecture
 
 ```
-wt-project-base          Universal rules (file size, secrets, TODOs)
-  └── wt-project-web      Web domain rules (i18n, routing, DB, components, design)
+set-project-base          Universal rules (file size, secrets, TODOs)
+  └── set-project-web      Web domain rules (i18n, routing, DB, components, design)
         └── your-org-web   Organization-specific rules (your conventions)
 ```
 
-Each layer inherits from its parent. Customize via `wt/plugins/project-type.yaml` without writing Python.
+Each layer inherits from its parent. Customize via `set/plugins/project-type.yaml` without writing Python.
 
 ## What's NOT Included (Yet)
 
@@ -179,8 +179,8 @@ Longer-term:
 
 ## Related
 
-- [wt-tools](https://github.com/tatargabor/wt-tools) — The orchestration engine that consumes project type plugins
-- [wt-project-base](https://github.com/tatargabor/wt-project-base) — Abstract base layer with ProjectType ABC and universal rules
+- [set-core](https://github.com/tatargabor/set-core) — The orchestration engine that consumes project type plugins
+- [set-project-base](https://github.com/tatargabor/set-project-base) — Abstract base layer with ProjectType ABC and universal rules
 
 ## License
 

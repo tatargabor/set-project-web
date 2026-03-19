@@ -12,7 +12,7 @@ Review a spec document against the orchestration planning guide and checklist.
 **Steps**
 
 1. **Read the planning guide and checklist**
-   - Read `docs/planning-guide.md` from the wt-tools project (find it via `which wt-orchestrate` → resolve to wt-tools root, or check common locations: `~/code2/wt-tools/docs/`, `~/code/wt-tools/docs/`)
+   - Read `docs/planning-guide.md` from the set-core project (find it via `which wt-orchestrate` → resolve to set-core root, or check common locations: `~/code2/set-core/docs/`, `~/code/set-core/docs/`)
    - Read `docs/plan-checklist.md` from the same location
    - If not found locally, check if the current project has copies in its own `docs/` directory
 

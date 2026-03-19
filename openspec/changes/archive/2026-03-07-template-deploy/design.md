@@ -1,15 +1,15 @@
 ## Context
 
 `wt-project init --project-type web` currently:
-1. Registers the project in the wt-tools registry
-2. Deploys wt-tools hooks/MCP/skills
-3. Saves the project type to `wt/plugins/project-type.yaml`
+1. Registers the project in the set-core registry
+2. Deploys set-core hooks/MCP/skills
+3. Saves the project type to `set/plugins/project-type.yaml`
 
-But the template files bundled in the project type package (e.g., `wt_project_web/templates/nextjs/project-knowledge.yaml` and `rules/*.md`) are never copied to the target project. Users get the type registered but none of the domain knowledge deployed.
+But the template files bundled in the project type package (e.g., `set_project_web/templates/nextjs/project-knowledge.yaml` and `rules/*.md`) are never copied to the target project. Users get the type registered but none of the domain knowledge deployed.
 
 The system has two repos involved:
-- **wt-project-base** (Python): owns the `ProjectType` ABC, resolver, and CLI — this is where template deploy logic belongs
-- **wt-project** (bash, in wt-tools): the user-facing CLI that orchestrates init — calls Python for type resolution
+- **set-project-base** (Python): owns the `ProjectType` ABC, resolver, and CLI — this is where template deploy logic belongs
+- **wt-project** (bash, in set-core): the user-facing CLI that orchestrates init — calls Python for type resolution
 
 ## Goals / Non-Goals
 
@@ -28,17 +28,17 @@ The system has two repos involved:
 
 ## Decisions
 
-### D1: Template deploy lives in wt-project-base Python CLI
+### D1: Template deploy lives in set-project-base Python CLI
 
 The Python package has native access to installed package resources via `importlib.resources` or `ProjectType.get_template_dir()`. The bash script already delegates to Python for `_resolve_project_type` and `_list_project_types`.
 
-New subcommand: `wt-project-base deploy-templates --project-dir . --type web --template nextjs [--force]`
+New subcommand: `set-project-base deploy-templates --project-dir . --type web --template nextjs [--force]`
 
 Alternative considered: Pure bash implementation — rejected because locating Python package resource directories from bash is fragile and duplicates the entry_points resolution.
 
 ### D2: Bash calls Python for template deploy (same pattern as type resolution)
 
-Add `_deploy_project_templates()` bash function that calls `wt-project-base deploy-templates`. Called from `cmd_init` after `_save_project_type`, and from `cmd_init_knowledge` when a project type is configured.
+Add `_deploy_project_templates()` bash function that calls `set-project-base deploy-templates`. Called from `cmd_init` after `_save_project_type`, and from `cmd_init_knowledge` when a project type is configured.
 
 ### D3: Additive-only deploy with --force override
 
@@ -65,7 +65,7 @@ If `--template` is not specified but the project type has exactly one template, 
 
 ### D6: Package data inclusion
 
-`wt-project-web/pyproject.toml` needs to include template files and other data files in the package distribution. Use `[tool.hatch.build.targets.wheel]` with `packages` or include patterns for the `templates/`, `directives/`, and `verification-rules/` directories.
+`set-project-web/pyproject.toml` needs to include template files and other data files in the package distribution. Use `[tool.hatch.build.targets.wheel]` with `packages` or include patterns for the `templates/`, `directives/`, and `verification-rules/` directories.
 
 ## Risks / Trade-offs
 
