@@ -42,3 +42,17 @@ Set the following headers via `next.config.js` headers or middleware:
 - Never prefix secrets with `NEXT_PUBLIC_` — these values are inlined into the client bundle at build time
 - Only use `NEXT_PUBLIC_` for non-sensitive, client-safe values (site URL, feature flags)
 - Access secrets only in server-side code (Server Components, API routes, Server Actions)
+
+## Secret Code Enumeration Prevention
+Endpoints accepting secret codes (gift cards, coupons, invite codes, reset tokens) MUST return a single generic error for all failure cases. Never distinguish "not found" vs "expired" vs "already used" in the response — this lets attackers enumerate valid codes. Log the specific reason server-side.
+
+```typescript
+// WRONG: distinct errors reveal code validity
+if (!gc) return Response.json({ error: "Gift card not found" }, { status: 404 })
+if (gc.balance <= 0) return Response.json({ error: "No balance" }, { status: 400 })
+
+// CORRECT: single generic error
+if (!gc || gc.balance <= 0 || gc.expiresAt < new Date()) {
+  return Response.json({ error: "Invalid or expired gift card" }, { status: 400 })
+}
+```
