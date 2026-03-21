@@ -189,6 +189,19 @@ class WebProjectType(BaseProjectType):
                     "forbidden": r"NEXT_PUBLIC_(?:SECRET|KEY|PASSWORD|TOKEN|API_KEY|PRIVATE)",
                 },
             ),
+            VerificationRule(
+                id="route-listing-completeness",
+                description="Dynamic detail routes ([slug]/page.tsx) must have a sibling listing page",
+                check="file-mentions",
+                severity="warning",
+                config={
+                    "source": {
+                        "pattern": "src/app/**/[slug]/page.tsx",
+                        "exclude": ["src/app/api/**"],
+                    },
+                    "target": "parent-sibling-page",
+                },
+            ),
         ]
         return base_rules + web_rules
 
@@ -277,7 +290,11 @@ class WebProjectType(BaseProjectType):
             "- [ ] Protected resources enforce auth before the handler runs (middleware, not handler-level)\n"
             "- [ ] Public-facing inputs are validated at the boundary (type, range, size)\n"
             "- [ ] Multi-user queries are scoped by the owning entity\n"
-            "- [ ] No `dangerouslySetInnerHTML` or `v-html` with user-supplied content"
+            "- [ ] No `dangerouslySetInnerHTML` or `v-html` with user-supplied content\n"
+            "- [ ] Every spec-mentioned category has a listing page (page.tsx)\n"
+            "- [ ] Every [slug] detail route has a corresponding listing page\n"
+            "- [ ] Tasks marked [x] in tasks.md have their referenced files actually created\n"
+            "- [ ] i18n keys for new route names present in all locale files"
         )
 
     def generated_file_patterns(self) -> List[str]:
@@ -417,3 +434,19 @@ class WebProjectType(BaseProjectType):
             },
         }
         return overrides.get(change_type, {})
+
+    def rule_keyword_mapping(self) -> dict:
+        """Web-specific keyword-to-rule mapping.
+
+        Extends NullProfile defaults with catalog and payment categories.
+        """
+        mapping = super().rule_keyword_mapping()
+        mapping["catalog"] = {
+            "keywords": ["catalog", "listing", "category", "browse", "product list", "page.tsx", "grid"],
+            "globs": ["web/route-completeness.md"],
+        }
+        mapping["payment"] = {
+            "keywords": ["payment", "checkout", "transaction", "order", "billing", "cart", "invoice"],
+            "globs": ["web/transaction-patterns.md", "web/security-patterns.md"],
+        }
+        return mapping
